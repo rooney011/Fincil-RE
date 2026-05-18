@@ -12,6 +12,10 @@ import {
   PRIORITY_TONE,
 } from "../goals/constants";
 import { ColdStartBanner } from "./cold-start-banner";
+import { ThisWeekCard } from "./this-week-card";
+import { MiserNudge } from "./miser-nudge";
+import { computeWeekSummary } from "@/lib/insights/weekly";
+import { getOrGenerateNudge } from "@/lib/insights/nudge";
 
 type RecentDebate = {
   id: string;
@@ -33,6 +37,15 @@ export default async function DashboardPage() {
     .from("transactions")
     .select("id", { count: "exact", head: true })
     .eq("user_id", user.id);
+
+  const hasTransactions = (txCount ?? 0) > 0;
+
+  const [weekSummary, nudge] = hasTransactions
+    ? await Promise.all([
+        computeWeekSummary(supabase, user.id),
+        getOrGenerateNudge(supabase, user.id),
+      ])
+    : [null, null];
 
   const [{ data: goalsData }, { data: debatesData }] = await Promise.all([
     supabase
@@ -86,9 +99,21 @@ export default async function DashboardPage() {
         }
       />
 
-      {(txCount ?? 0) === 0 && (
+      {!hasTransactions && (
         <div className="mb-6">
           <ColdStartBanner />
+        </div>
+      )}
+
+      {nudge && (
+        <div className="mb-6">
+          <MiserNudge nudge={nudge} />
+        </div>
+      )}
+
+      {weekSummary && (
+        <div className="mb-6">
+          <ThisWeekCard summary={weekSummary} />
         </div>
       )}
 
