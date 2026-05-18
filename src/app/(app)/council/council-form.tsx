@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { cn, formatCurrency } from "@/lib/utils";
+import { features } from "@/lib/env";
 import { CATEGORIES, type Category } from "../transactions/constants";
 import { StreamEventDecoder } from "@/lib/ai/stream-protocol";
 
@@ -805,7 +806,7 @@ function VerdictCard({
                   : "No transaction logged."}
               </p>
             </div>
-            {shareSessionId && (
+            {shareSessionId && features.share && (
               <Button size="sm" variant="ghost" onClick={copyShareLink}>
                 <Share2 className="size-3.5" />
                 Share
@@ -839,14 +840,14 @@ function VerdictCard({
                 Decline
               </Button>
             </div>
-            {shareSessionId && (
+            {shareSessionId && features.share && (
               <Button size="sm" variant="ghost" onClick={copyShareLink}>
                 <Share2 className="size-3.5" />
                 Share
               </Button>
             )}
           </div>
-        ) : shareSessionId ? (
+        ) : shareSessionId && features.share ? (
           <div className="flex items-center justify-end pt-3 border-t border-border">
             <Button size="sm" variant="ghost" onClick={copyShareLink}>
               <Share2 className="size-3.5" />

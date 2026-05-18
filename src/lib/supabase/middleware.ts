@@ -44,9 +44,11 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isAuthRoute =
     pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
+  const isAuthCallback = pathname.startsWith("/auth/callback");
   const isOnboarding = pathname.startsWith("/onboarding");
   const isShare = pathname.startsWith("/share");
-  const isPublic = pathname === "/" || isAuthRoute || isShare;
+  const isPublic =
+    pathname === "/" || isAuthRoute || isShare || isAuthCallback;
 
   if (!user && !isPublic) {
     const url = request.nextUrl.clone();
@@ -61,8 +63,9 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // /share/* is always public — never gated, never redirected.
-  if (isShare) return response;
+  // /share/* and /auth/callback are always pass-through — public access never
+  // gated, and the callback must run regardless of session state.
+  if (isShare || isAuthCallback) return response;
 
   // Profile gate: authed user without a profile row gets pushed to onboarding.
   if (user && !isOnboarding && !isAuthRoute) {

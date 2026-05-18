@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { Loader } from "lucide-react";
+import { Loader, Mail, Inbox, ArrowLeft } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,22 +12,28 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 
 export function SignInForm() {
-  const router = useRouter();
   const search = useSearchParams();
   const next = search.get("next") ?? "/dashboard";
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sentTo, setSentTo] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (loading) return;
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail) return;
     setLoading(true);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
+    const { error } = await supabase.auth.signInWithOtp({
+      email: cleanEmail,
+      options: {
+        emailRedirectTo: redirectTo,
+        shouldCreateUser: true,
+      },
     });
 
     setLoading(false);
@@ -37,8 +43,38 @@ export function SignInForm() {
       return;
     }
 
-    router.push(next);
-    router.refresh();
+    setSentTo(cleanEmail);
+  }
+
+  if (sentTo) {
+    return (
+      <Card>
+        <CardContent className="p-6 space-y-4 text-center">
+          <div className="size-10 rounded-full bg-primary/10 text-primary grid place-items-center mx-auto">
+            <Inbox className="size-5" />
+          </div>
+          <div className="space-y-1">
+            <h2 className="text-base font-medium">Check your inbox</h2>
+            <p className="text-sm text-muted-foreground">
+              We sent a sign-in link to{" "}
+              <span className="text-foreground">{sentTo}</span>. Click it on
+              this device and you&apos;ll land back here, signed in.
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSentTo(null);
+              setEmail("");
+            }}
+          >
+            <ArrowLeft className="size-3.5" />
+            Use a different email
+          </Button>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -52,24 +88,26 @@ export function SignInForm() {
               type="email"
               autoComplete="email"
               required
+              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
             />
+            <p className="text-xs text-muted-foreground">
+              We&apos;ll send a one-time link. No passwords to forget.
+            </p>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading && <Loader className="size-4 animate-spin" />}
-            Sign in
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading || email.trim().length === 0}
+          >
+            {loading ? (
+              <Loader className="size-4 animate-spin" />
+            ) : (
+              <Mail className="size-4" />
+            )}
+            Send sign-in link
           </Button>
         </form>
       </CardContent>

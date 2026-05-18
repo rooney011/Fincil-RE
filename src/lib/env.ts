@@ -19,6 +19,30 @@ const publicSchema = z.object({
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
 });
 
+/** "true"/"1"/"yes" → true; "false"/"0"/"no" → false; missing → default. */
+function parseBoolEnv(raw: string | undefined, fallback: boolean): boolean {
+  if (raw === undefined || raw === "") return fallback;
+  const v = raw.trim().toLowerCase();
+  if (v === "true" || v === "1" || v === "yes" || v === "on") return true;
+  if (v === "false" || v === "0" || v === "no" || v === "off") return false;
+  return fallback;
+}
+
+/**
+ * Feature flags. Read on both server and client.
+ *
+ * - `share`: gates the public /share/[sessionId] page + the Share button on
+ *   the council verdict card. Default ON. Flip off if you want to remove
+ *   public exposure while iterating.
+ * - `nudges`: gates the LLM-backed dashboard nudge generator. Default ON.
+ *   Flip off to immediately stop OpenAI calls on /dashboard. The static
+ *   "This week" card stays.
+ */
+export const features = {
+  share: parseBoolEnv(process.env.NEXT_PUBLIC_FEATURE_SHARE, true),
+  nudges: parseBoolEnv(process.env.FEATURE_NUDGES, true),
+};
+
 function parseEnv() {
   const isServer = typeof window === "undefined";
 

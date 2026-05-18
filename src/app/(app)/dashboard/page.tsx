@@ -16,6 +16,7 @@ import { ThisWeekCard } from "./this-week-card";
 import { MiserNudge } from "./miser-nudge";
 import { computeWeekSummary } from "@/lib/insights/weekly";
 import { getOrGenerateNudge } from "@/lib/insights/nudge";
+import { features } from "@/lib/env";
 
 type RecentDebate = {
   id: string;
@@ -43,7 +44,7 @@ export default async function DashboardPage() {
   const [weekSummary, nudge] = hasTransactions
     ? await Promise.all([
         computeWeekSummary(supabase, user.id),
-        getOrGenerateNudge(supabase, user.id),
+        features.nudges ? getOrGenerateNudge(supabase, user.id) : null,
       ])
     : [null, null];
 

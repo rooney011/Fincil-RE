@@ -1,4 +1,6 @@
 import { ImageResponse } from "next/og";
+import { notFound } from "next/navigation";
+import { features } from "@/lib/env";
 import { bestLineFor, loadPublicSession } from "./loader";
 
 export const runtime = "nodejs";
@@ -28,6 +30,7 @@ function truncate(s: string, max: number): string {
 type Props = { params: { sessionId: string } };
 
 export default async function OgImage({ params }: Props) {
+  if (!features.share) notFound();
   const debate = await loadPublicSession(params.sessionId);
 
   const approved = debate?.verdict === "approved";

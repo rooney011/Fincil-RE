@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, XCircle, Scale, ShieldCheck, Sparkles, Gavel } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
+import { features } from "@/lib/env";
 import { loadPublicSession, type SharedTurn } from "./loader";
 
 export const runtime = "nodejs";
@@ -12,6 +13,7 @@ export const runtime = "nodejs";
 type Props = { params: Promise<{ sessionId: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (!features.share) return { title: "Not found — Fincil" };
   const { sessionId } = await params;
   const debate = await loadPublicSession(sessionId);
   if (!debate) {
@@ -60,6 +62,7 @@ const SAFETY_TONE: Record<
 };
 
 export default async function SharePage({ params }: Props) {
+  if (!features.share) notFound();
   const { sessionId } = await params;
   const debate = await loadPublicSession(sessionId);
   if (!debate) notFound();
