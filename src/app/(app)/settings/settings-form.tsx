@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formatCurrency } from "@/lib/utils";
 import { updateProfile, type UpdateProfileInput } from "./actions";
 
 const ROLES = [
@@ -32,7 +33,15 @@ const RISKS = [
   { value: "high", label: "High — open to risk" },
 ] as const;
 
-export function SettingsForm({ initial }: { initial: UpdateProfileInput }) {
+export function SettingsForm({
+  initial,
+  activeCommitmentsTotal,
+  activeCommitmentsCount,
+}: {
+  initial: UpdateProfileInput;
+  activeCommitmentsTotal: number;
+  activeCommitmentsCount: number;
+}) {
   const [form, setForm] = useState<UpdateProfileInput>(initial);
   const [pending, startTransition] = useTransition();
 
@@ -48,7 +57,7 @@ export function SettingsForm({ initial }: { initial: UpdateProfileInput }) {
       toast.error("Display name is required.");
       return;
     }
-    if (form.monthly_income < 0 || form.monthly_expenses < 0) {
+    if (form.monthly_income < 0 || form.baseline_monthly_expenses < 0) {
       toast.error("Income and expenses must be zero or more.");
       return;
     }
@@ -62,6 +71,9 @@ export function SettingsForm({ initial }: { initial: UpdateProfileInput }) {
       toast.success("Profile saved.");
     });
   }
+
+  const computedTotal =
+    Number(form.baseline_monthly_expenses) + activeCommitmentsTotal;
 
   return (
     <Card>
@@ -122,19 +134,23 @@ export function SettingsForm({ initial }: { initial: UpdateProfileInput }) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="monthly_expenses">Monthly expenses (₹)</Label>
+            <Label htmlFor="baseline_monthly_expenses">
+              Monthly expenses — baseline (₹)
+            </Label>
             <Input
-              id="monthly_expenses"
+              id="baseline_monthly_expenses"
               type="number"
               inputMode="decimal"
               min={0}
               step="0.01"
               value={
-                form.monthly_expenses === 0 ? "" : String(form.monthly_expenses)
+                form.baseline_monthly_expenses === 0
+                  ? ""
+                  : String(form.baseline_monthly_expenses)
               }
               onChange={(e) =>
                 setField(
-                  "monthly_expenses",
+                  "baseline_monthly_expenses",
                   e.target.value === ""
                     ? 0
                     : Number.parseFloat(e.target.value) || 0,
@@ -143,8 +159,16 @@ export function SettingsForm({ initial }: { initial: UpdateProfileInput }) {
               disabled={pending}
             />
             <p className="text-xs text-muted-foreground">
-              Recurring monthly. Council EMI acceptances are added here
-              automatically.
+              Your recurring outflow before any Council EMIs. Active
+              commitments
+              {activeCommitmentsCount > 0
+                ? ` (${activeCommitmentsCount}: ${formatCurrency(activeCommitmentsTotal)}/mo)`
+                : ""}{" "}
+              are added automatically — total{" "}
+              <span className="text-foreground font-mono tabular-nums">
+                {formatCurrency(computedTotal)}/mo
+              </span>
+              .
             </p>
           </div>
         </div>

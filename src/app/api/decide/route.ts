@@ -3,6 +3,10 @@ import { z } from "zod";
 
 import { createClient } from "@/lib/supabase/server";
 import { embedDocument } from "@/lib/ai/embeddings";
+import {
+  expireMaturedCommitments,
+  recordCommitment,
+} from "@/lib/finance/emi-commitments";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -43,6 +47,10 @@ export async function POST(request: Request) {
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  // Decay any matured EMI commitments before reading expenses for the negative
+  // balance guard or bumping expenses for a new commitment.
+  await expireMaturedCommitments(supabase, user.id);
 
   // Load the session.
   const { data: sessionRow, error: sessionError } = await supabase
@@ -172,8 +180,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: txError.message }, { status: 500 });
   }
 
-  // For EMI: bump recurring monthly_expenses so future debates know this
-  // purchase is now a standing commitment.
+  // For EMI: bump recurring monthly_expenses AND record a commitment row.
+  // The row gives us an audit trail and lets the lazy-expiry pass undo this
+  // bump 12 months from now without the user having to do anything.
   if (finance.paymentMode === "emi") {
     const { data: current, error: readError } = await supabase
       .from("profiles")
@@ -192,6 +201,18 @@ export async function POST(request: Request) {
       if (updError) {
         console.warn("[decide] EMI expense bump failed:", updError);
       }
+    }
+
+    const commit = await recordCommitment(supabase, {
+      userId: user.id,
+      sessionId,
+      monthlyAmount: finance.estimatedEmi,
+    });
+    if ("error" in commit) {
+      console.warn(
+        "[decide] could not record EMI commitment row:",
+        commit.error,
+      );
     }
   }
 

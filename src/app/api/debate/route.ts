@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { embedQuery } from "@/lib/ai/embeddings";
 import { computeFinanceVerdict } from "@/lib/finance/engine";
+import { expireMaturedCommitments } from "@/lib/finance/emi-commitments";
 import {
   streamDebate,
   type RelevantTransaction,
@@ -51,6 +52,10 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return json({ error: "Unauthorized" }, 401);
+
+  // Decay any expired EMI commitments before reading the profile — otherwise
+  // the engine debates against stale, inflated expenses.
+  await expireMaturedCommitments(supabase, user.id);
 
   const { data: profileRow, error: profileError } = await supabase
     .from("profiles")

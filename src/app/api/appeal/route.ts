@@ -11,6 +11,7 @@ import {
 } from "@/lib/ai/debate";
 import { encodeEvent, type StreamEvent } from "@/lib/ai/stream-protocol";
 import { extractIncome } from "@/lib/ai/extract-income";
+import { expireMaturedCommitments } from "@/lib/finance/emi-commitments";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -46,6 +47,9 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return json({ error: "Unauthorized" }, 401);
+
+  // Decay any expired EMI commitments before the appeal recomputes the math.
+  await expireMaturedCommitments(supabase, user.id);
 
   // Load the original session.
   const { data: session, error: sessionError } = await supabase

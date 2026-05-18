@@ -36,6 +36,7 @@ export async function completeOnboarding(
     role: parsed.data.role,
     monthly_income: parsed.data.monthly_income,
     monthly_expenses: parsed.data.monthly_expenses,
+    baseline_monthly_expenses: parsed.data.monthly_expenses,
     income_type: "fixed",
     risk_tolerance: parsed.data.risk_tolerance,
     financial_goal: parsed.data.financial_goal || null,
