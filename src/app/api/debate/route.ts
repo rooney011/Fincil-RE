@@ -173,6 +173,7 @@ export async function POST(request: Request) {
             amount,
             category: category ?? null,
             verdict: result.verdict,
+            reasoning: result.reasoning,
             transcript: result.transcript,
             finance_snapshot: financeVerdict,
           })

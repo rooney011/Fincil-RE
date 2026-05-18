@@ -13,6 +13,7 @@ import {
   Check,
   X,
   MessageSquare,
+  Share2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -467,6 +468,7 @@ export function CouncilForm() {
               deciding={deciding}
               canDecide={sessionId !== null && idx === latestRoundIdx}
               showAppealedBadge={idx < latestRoundIdx}
+              sessionId={sessionId}
               onDecide={decide}
             />
           ))}
@@ -560,6 +562,7 @@ function RoundSection({
   deciding,
   canDecide,
   showAppealedBadge,
+  sessionId,
   onDecide,
 }: {
   round: RoundView;
@@ -570,6 +573,7 @@ function RoundSection({
   deciding: boolean;
   canDecide: boolean;
   showAppealedBadge: boolean;
+  sessionId: string | null;
   onDecide: (action: "accept" | "decline") => void;
 }) {
   const isAppeal = round.appealText !== null;
@@ -626,6 +630,7 @@ function RoundSection({
           canDecide={canDecide}
           paymentMode={round.financeVerdict.paymentMode}
           showSupersededBadge={showAppealedBadge}
+          shareSessionId={isLatest ? sessionId : null}
           onDecide={onDecide}
         />
       )}
@@ -723,6 +728,7 @@ function VerdictCard({
   canDecide,
   paymentMode,
   showSupersededBadge,
+  shareSessionId,
   onDecide,
 }: {
   verdict: "approved" | "rejected";
@@ -732,10 +738,20 @@ function VerdictCard({
   canDecide: boolean;
   paymentMode: "cash" | "emi" | "deferred-loan";
   showSupersededBadge: boolean;
+  shareSessionId: string | null;
   onDecide: (action: "accept" | "decline") => void;
 }) {
   const approved = verdict === "approved";
   const canAccept = approved && paymentMode !== "deferred-loan";
+
+  function copyShareLink() {
+    if (!shareSessionId) return;
+    const url = `${window.location.origin}/share/${shareSessionId}`;
+    navigator.clipboard
+      .writeText(url)
+      .then(() => toast.success("Share link copied to clipboard."))
+      .catch(() => toast.error("Couldn't copy. Long-press the address to copy manually."));
+  }
 
   return (
     <Card
@@ -770,48 +786,71 @@ function VerdictCard({
             </Badge>
           </div>
         ) : decided ? (
-          <div className="flex items-center gap-2 pt-3 border-t border-border">
-            <Badge
-              variant="outline"
-              className={cn(
-                "capitalize",
-                decided === "accepted"
-                  ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
-                  : "bg-zinc-500/10 text-zinc-300 border-zinc-500/20",
-              )}
-            >
-              {decided === "accepted" ? "Accepted & logged" : "Declined"}
-            </Badge>
-            <p className="text-xs text-muted-foreground">
-              {decided === "accepted"
-                ? "Find it in your transactions."
-                : "No transaction logged."}
-            </p>
-          </div>
-        ) : canDecide ? (
-          <div className="flex items-center gap-2 pt-3 border-t border-border">
-            {canAccept && (
-              <Button
-                size="sm"
-                onClick={() => onDecide("accept")}
-                disabled={deciding}
-              >
-                {deciding ? (
-                  <Loader className="size-3.5 animate-spin" />
-                ) : (
-                  <Check className="size-3.5" />
+          <div className="flex items-center justify-between gap-2 pt-3 border-t border-border flex-wrap">
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="outline"
+                className={cn(
+                  "capitalize",
+                  decided === "accepted"
+                    ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                    : "bg-zinc-500/10 text-zinc-300 border-zinc-500/20",
                 )}
-                Accept & log
+              >
+                {decided === "accepted" ? "Accepted & logged" : "Declined"}
+              </Badge>
+              <p className="text-xs text-muted-foreground">
+                {decided === "accepted"
+                  ? "Find it in your transactions."
+                  : "No transaction logged."}
+              </p>
+            </div>
+            {shareSessionId && (
+              <Button size="sm" variant="ghost" onClick={copyShareLink}>
+                <Share2 className="size-3.5" />
+                Share
               </Button>
             )}
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onDecide("decline")}
-              disabled={deciding}
-            >
-              <X className="size-3.5" />
-              Decline
+          </div>
+        ) : canDecide ? (
+          <div className="flex items-center justify-between gap-2 pt-3 border-t border-border flex-wrap">
+            <div className="flex items-center gap-2">
+              {canAccept && (
+                <Button
+                  size="sm"
+                  onClick={() => onDecide("accept")}
+                  disabled={deciding}
+                >
+                  {deciding ? (
+                    <Loader className="size-3.5 animate-spin" />
+                  ) : (
+                    <Check className="size-3.5" />
+                  )}
+                  Accept & log
+                </Button>
+              )}
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onDecide("decline")}
+                disabled={deciding}
+              >
+                <X className="size-3.5" />
+                Decline
+              </Button>
+            </div>
+            {shareSessionId && (
+              <Button size="sm" variant="ghost" onClick={copyShareLink}>
+                <Share2 className="size-3.5" />
+                Share
+              </Button>
+            )}
+          </div>
+        ) : shareSessionId ? (
+          <div className="flex items-center justify-end pt-3 border-t border-border">
+            <Button size="sm" variant="ghost" onClick={copyShareLink}>
+              <Share2 className="size-3.5" />
+              Share
             </Button>
           </div>
         ) : null}

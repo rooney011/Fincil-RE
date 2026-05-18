@@ -45,7 +45,8 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute =
     pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
   const isOnboarding = pathname.startsWith("/onboarding");
-  const isPublic = pathname === "/" || isAuthRoute;
+  const isShare = pathname.startsWith("/share");
+  const isPublic = pathname === "/" || isAuthRoute || isShare;
 
   if (!user && !isPublic) {
     const url = request.nextUrl.clone();
@@ -59,6 +60,9 @@ export async function updateSession(request: NextRequest) {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
+
+  // /share/* is always public — never gated, never redirected.
+  if (isShare) return response;
 
   // Profile gate: authed user without a profile row gets pushed to onboarding.
   if (user && !isOnboarding && !isAuthRoute) {

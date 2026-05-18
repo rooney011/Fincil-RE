@@ -264,6 +264,7 @@ export async function POST(request: Request) {
             new_transcript: result.transcript,
             new_verdict: result.verdict,
             new_finance_snapshot: financeVerdict,
+            reasoning: result.reasoning,
           });
         if (appealInsertError) {
           console.warn(
