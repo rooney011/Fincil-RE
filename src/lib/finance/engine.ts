@@ -15,14 +15,12 @@ export type Role =
   | "business"
   | "general";
 
-export type IncomeType = "fixed" | "variable";
 export type RiskTolerance = "low" | "medium" | "high";
 
 export type ProfileForEngine = {
   monthly_income: number;
   monthly_expenses: number;
   role: Role;
-  income_type: IncomeType;
   risk_tolerance: RiskTolerance;
 };
 

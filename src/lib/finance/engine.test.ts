@@ -8,7 +8,6 @@ const employee: ProfileForEngine = {
   monthly_income: 50_000,
   monthly_expenses: 30_000,
   role: "employee",
-  income_type: "fixed",
   risk_tolerance: "medium",
 };
 
@@ -114,7 +113,6 @@ describe("computeFinanceVerdict — student override", () => {
       monthly_income: 5_000,
       monthly_expenses: 10_000,
       role: "student",
-      income_type: "variable",
       risk_tolerance: "low",
     };
     const v = computeFinanceVerdict({ profile: student, amount: 15_000 });

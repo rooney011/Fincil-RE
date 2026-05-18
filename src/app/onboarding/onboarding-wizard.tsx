@@ -1,8 +1,16 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowLeft, ArrowRight, Check, Loader } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Loader,
+  Sparkles,
+  PencilLine,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,6 +26,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { completeOnboarding, type OnboardingInput } from "./actions";
+import { seedDemoData } from "./demo-actions";
 
 const ROLES = [
   { value: "student", label: "Student" },
@@ -25,11 +34,6 @@ const ROLES = [
   { value: "employee", label: "Employee" },
   { value: "business", label: "Business owner" },
   { value: "general", label: "Other" },
-] as const;
-
-const INCOME_TYPES = [
-  { value: "fixed", label: "Fixed — same amount each month" },
-  { value: "variable", label: "Variable — changes month to month" },
 ] as const;
 
 const RISK_LEVELS = [
@@ -42,22 +46,25 @@ const STEPS = [
   { title: "About you", hint: "Just the basics." },
   { title: "Money", hint: "Rough monthly numbers, ₹." },
   { title: "Direction", hint: "Risk appetite and a goal, if any." },
+  { title: "Get started", hint: "Pick how you want to fill in your data." },
 ] as const;
 
-type Step = 0 | 1 | 2;
+type Step = 0 | 1 | 2 | 3;
 
 export function OnboardingWizard() {
+  const router = useRouter();
   const [step, setStep] = useState<Step>(0);
   const [form, setForm] = useState<OnboardingInput>({
     display_name: "",
     role: "student",
     monthly_income: 0,
     monthly_expenses: 0,
-    income_type: "fixed",
     financial_goal: "",
     risk_tolerance: "medium",
   });
-  const [pending, startTransition] = useTransition();
+  const [savePending, startSave] = useTransition();
+  const [seedPending, startSeed] = useTransition();
+  const [skipPending, startSkip] = useTransition();
 
   function setField<K extends keyof OnboardingInput>(
     key: K,
@@ -81,21 +88,44 @@ export function OnboardingWizard() {
 
   function next() {
     if (!canAdvance()) return;
-    setStep((s) => Math.min(2, s + 1) as Step);
+    setStep((s) => Math.min(3, s + 1) as Step);
   }
 
   function back() {
     setStep((s) => Math.max(0, s - 1) as Step);
   }
 
-  function submit() {
-    startTransition(async () => {
+  function saveProfile() {
+    startSave(async () => {
       const result = await completeOnboarding(form);
-      if (result?.error) toast.error(result.error);
+      if ("error" in result) {
+        toast.error(result.error);
+        return;
+      }
+      setStep(3);
     });
   }
 
-  const isLast = step === 2;
+  function startWithDemo() {
+    startSeed(async () => {
+      const result = await seedDemoData();
+      if ("error" in result) {
+        toast.error(result.error);
+        return;
+      }
+      toast.success(`Loaded ${result.inserted} sample transactions.`);
+      router.push("/dashboard");
+    });
+  }
+
+  function startManual() {
+    startSkip(() => {
+      router.push("/transactions");
+    });
+  }
+
+  const isLastFormStep = step === 2;
+  const anyPending = savePending || seedPending || skipPending;
 
   return (
     <div className="w-full max-w-lg space-y-6">
@@ -104,7 +134,7 @@ export function OnboardingWizard() {
           Set up your profile
         </h1>
         <p className="text-sm text-muted-foreground">
-          Three quick steps. The Council uses this to brief itself.
+          A few quick steps. The Council uses this to brief itself.
         </p>
       </div>
 
@@ -196,28 +226,6 @@ export function OnboardingWizard() {
                   }
                 />
               </Field>
-              <Field id="income_type" label="Income type">
-                <Select
-                  value={form.income_type}
-                  onValueChange={(v) =>
-                    setField(
-                      "income_type",
-                      v as OnboardingInput["income_type"],
-                    )
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {INCOME_TYPES.map((t) => (
-                      <SelectItem key={t.value} value={t.value}>
-                        {t.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
             </div>
           )}
 
@@ -260,36 +268,105 @@ export function OnboardingWizard() {
               </Field>
             </div>
           )}
+
+          {step === 3 && (
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={startWithDemo}
+                disabled={anyPending}
+                className={cn(
+                  "w-full text-left rounded-lg border border-border p-4 transition-colors",
+                  "hover:border-primary hover:bg-muted/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "disabled:cursor-not-allowed disabled:opacity-60",
+                )}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="rounded-md bg-primary/10 p-2">
+                    {seedPending ? (
+                      <Loader className="size-4 animate-spin text-primary" />
+                    ) : (
+                      <Sparkles className="size-4 text-primary" />
+                    )}
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-medium">Try with sample data</span>
+                      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                        Recommended
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Seed ~60 days of plausible spending and two active goals
+                      so the Council has something to ground its debate in. You
+                      can reset it from Settings anytime.
+                    </p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={startManual}
+                disabled={anyPending}
+                className={cn(
+                  "w-full text-left rounded-lg border border-border p-4 transition-colors",
+                  "hover:border-primary hover:bg-muted/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "disabled:cursor-not-allowed disabled:opacity-60",
+                )}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="rounded-md bg-muted p-2">
+                    {skipPending ? (
+                      <Loader className="size-4 animate-spin" />
+                    ) : (
+                      <PencilLine className="size-4" />
+                    )}
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <span className="font-medium">I&apos;ll add my own</span>
+                    <p className="text-xs text-muted-foreground">
+                      Skip the sample data and go straight to Transactions to
+                      log a few. The Council works best with at least 10–15
+                      entries.
+                    </p>
+                  </div>
+                </div>
+              </button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      <div className="flex items-center justify-between gap-2">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={back}
-          disabled={step === 0 || pending}
-        >
-          <ArrowLeft className="size-4" />
-          Back
-        </Button>
+      {step < 3 && (
+        <div className="flex items-center justify-between gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={back}
+            disabled={step === 0 || savePending}
+          >
+            <ArrowLeft className="size-4" />
+            Back
+          </Button>
 
-        {isLast ? (
-          <Button type="button" onClick={submit} disabled={pending}>
-            {pending ? (
-              <Loader className="size-4 animate-spin" />
-            ) : (
-              <Check className="size-4" />
-            )}
-            Finish
-          </Button>
-        ) : (
-          <Button type="button" onClick={next} disabled={!canAdvance()}>
-            Next
-            <ArrowRight className="size-4" />
-          </Button>
-        )}
-      </div>
+          {isLastFormStep ? (
+            <Button type="button" onClick={saveProfile} disabled={savePending}>
+              {savePending ? (
+                <Loader className="size-4 animate-spin" />
+              ) : (
+                <Check className="size-4" />
+              )}
+              Save & continue
+            </Button>
+          ) : (
+            <Button type="button" onClick={next} disabled={!canAdvance()}>
+              Next
+              <ArrowRight className="size-4" />
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -301,7 +378,7 @@ function Stepper({ current }: { current: Step }) {
         <div
           key={s.title}
           className={cn(
-            "h-1.5 w-12 rounded-full transition-colors",
+            "h-1.5 w-10 rounded-full transition-colors",
             i <= current ? "bg-primary" : "bg-muted",
           )}
         />

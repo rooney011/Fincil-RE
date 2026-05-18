@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Gavel, Target } from "lucide-react";
+import { Gavel, MessageSquare, Target } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { cn, formatCurrency } from "@/lib/utils";
@@ -11,6 +11,16 @@ import {
   type Goal,
   PRIORITY_TONE,
 } from "../goals/constants";
+import { ColdStartBanner } from "./cold-start-banner";
+
+type RecentDebate = {
+  id: string;
+  query: string;
+  amount: number;
+  verdict: "approved" | "rejected" | "pending" | null;
+  decision: "accepted" | "declined" | "appealed" | "negotiated" | null;
+  created_at: string;
+};
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -19,16 +29,29 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/sign-in");
 
-  const { data: goalsData } = await supabase
-    .from("savings_goals")
-    .select(
-      "id, name, target_amount, current_amount, target_date, priority, status, created_at",
-    )
-    .eq("user_id", user.id)
-    .eq("status", "active")
-    .order("priority", { ascending: false })
-    .order("created_at", { ascending: false })
-    .limit(3);
+  const { count: txCount } = await supabase
+    .from("transactions")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id);
+
+  const [{ data: goalsData }, { data: debatesData }] = await Promise.all([
+    supabase
+      .from("savings_goals")
+      .select(
+        "id, name, target_amount, current_amount, target_date, priority, status, created_at",
+      )
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .order("priority", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(3),
+    supabase
+      .from("council_sessions")
+      .select("id, query, amount, verdict, decision, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(5),
+  ]);
 
   const activeGoals: Goal[] = (goalsData ?? []).map((g) => ({
     id: g.id as string,
@@ -39,6 +62,15 @@ export default async function DashboardPage() {
     priority: g.priority as Goal["priority"],
     status: g.status as Goal["status"],
     created_at: g.created_at as string,
+  }));
+
+  const recentDebates: RecentDebate[] = (debatesData ?? []).map((d) => ({
+    id: d.id as string,
+    query: d.query as string,
+    amount: Number(d.amount),
+    verdict: (d.verdict as RecentDebate["verdict"]) ?? null,
+    decision: (d.decision as RecentDebate["decision"]) ?? null,
+    created_at: d.created_at as string,
   }));
 
   return (
@@ -53,6 +85,12 @@ export default async function DashboardPage() {
           </Link>
         }
       />
+
+      {(txCount ?? 0) === 0 && (
+        <div className="mb-6">
+          <ColdStartBanner />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
@@ -153,14 +191,94 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      <Card className="mt-8">
-        <CardContent className="p-10 text-center">
-          <p className="text-muted-foreground text-sm">
-            Empty state — KPIs and recent debates will appear here once you log
-            a few transactions and consult the Council.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="mt-8 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MessageSquare className="size-4 text-muted-foreground" />
+            <h2 className="text-sm font-medium">Recent debates</h2>
+          </div>
+          <Link
+            href="/council"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            New debate →
+          </Link>
+        </div>
+
+        {recentDebates.length === 0 ? (
+          <Card>
+            <CardContent className="p-8 text-center text-sm text-muted-foreground">
+              No debates yet.{" "}
+              <Link
+                href="/council"
+                className="text-foreground hover:underline underline-offset-4"
+              >
+                Consult the Council
+              </Link>{" "}
+              to weigh a purchase against your finances.
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardContent className="p-0 divide-y divide-border">
+              {recentDebates.map((d) => (
+                <RecentDebateRow key={d.id} debate={d} />
+              ))}
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </>
+  );
+}
+
+const VERDICT_TONE: Record<NonNullable<RecentDebate["verdict"]>, string> = {
+  approved: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+  rejected: "bg-red-500/10 text-red-300 border-red-500/20",
+  pending: "bg-zinc-500/10 text-zinc-300 border-zinc-500/20",
+};
+
+const DECISION_TONE: Record<NonNullable<RecentDebate["decision"]>, string> = {
+  accepted: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
+  declined: "bg-zinc-500/10 text-zinc-300 border-zinc-500/20",
+  appealed: "bg-amber-500/10 text-amber-300 border-amber-500/20",
+  negotiated: "bg-amber-500/10 text-amber-300 border-amber-500/20",
+};
+
+function RecentDebateRow({ debate }: { debate: RecentDebate }) {
+  const date = new Date(debate.created_at).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+  });
+  return (
+    <div className="flex items-center justify-between gap-3 px-4 py-3">
+      <div className="min-w-0 flex-1">
+        <p className="text-sm truncate">{debate.query}</p>
+        <p className="text-xs text-muted-foreground tabular-nums">
+          {formatCurrency(debate.amount)} • {date}
+        </p>
+      </div>
+      <div className="flex items-center gap-1.5 shrink-0">
+        {debate.verdict && (
+          <Badge
+            variant="outline"
+            className={cn("capitalize text-[10px]", VERDICT_TONE[debate.verdict])}
+          >
+            {debate.verdict}
+          </Badge>
+        )}
+        {debate.decision && (
+          <Badge
+            variant="outline"
+            className={cn(
+              "capitalize text-[10px]",
+              DECISION_TONE[debate.decision],
+            )}
+          >
+            {debate.decision}
+          </Badge>
+        )}
+      </div>
+    </div>
   );
 }

@@ -26,11 +26,6 @@ const ROLES = [
   { value: "general", label: "Other" },
 ] as const;
 
-const INCOME_TYPES = [
-  { value: "fixed", label: "Fixed — same each month" },
-  { value: "variable", label: "Variable — changes month to month" },
-] as const;
-
 const RISKS = [
   { value: "low", label: "Low — protect what I have" },
   { value: "medium", label: "Medium — balanced" },
@@ -81,49 +76,26 @@ export function SettingsForm({ initial }: { initial: UpdateProfileInput }) {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="role">Role</Label>
-            <Select
-              value={form.role}
-              onValueChange={(v) =>
-                setField("role", v as UpdateProfileInput["role"])
-              }
-              disabled={pending}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {ROLES.map((r) => (
-                  <SelectItem key={r.value} value={r.value}>
-                    {r.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="income_type">Income type</Label>
-            <Select
-              value={form.income_type}
-              onValueChange={(v) =>
-                setField("income_type", v as UpdateProfileInput["income_type"])
-              }
-              disabled={pending}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {INCOME_TYPES.map((t) => (
-                  <SelectItem key={t.value} value={t.value}>
-                    {t.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="space-y-2">
+          <Label htmlFor="role">Role</Label>
+          <Select
+            value={form.role}
+            onValueChange={(v) =>
+              setField("role", v as UpdateProfileInput["role"])
+            }
+            disabled={pending}
+          >
+            <SelectTrigger className="w-full md:w-1/2">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {ROLES.map((r) => (
+                <SelectItem key={r.value} value={r.value}>
+                  {r.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

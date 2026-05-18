@@ -55,7 +55,7 @@ export async function POST(request: Request) {
   const { data: profileRow, error: profileError } = await supabase
     .from("profiles")
     .select(
-      "monthly_income, monthly_expenses, role, income_type, risk_tolerance, display_name, financial_goal",
+      "monthly_income, monthly_expenses, role, risk_tolerance, display_name, financial_goal",
     )
     .eq("id", user.id)
     .single();
@@ -75,7 +75,6 @@ export async function POST(request: Request) {
       | "employee"
       | "business"
       | "general",
-    income_type: profileRow.income_type as "fixed" | "variable",
     risk_tolerance: profileRow.risk_tolerance as "low" | "medium" | "high",
     display_name: (profileRow.display_name as string | null) ?? null,
     financial_goal: (profileRow.financial_goal as string | null) ?? null,

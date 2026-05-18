@@ -7,10 +7,8 @@ import {
   Plus,
   Loader,
   Trash2,
-  Play,
-  Pause,
-  Target as TargetIcon,
-  X,
+  RotateCcw,
+  Check,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -78,7 +76,7 @@ export function GoalCard({
         return;
       }
       if (result.achieved) {
-        toast.success("Target met! Goal marked achieved.");
+        toast.success("Target met! Goal marked done.");
       } else {
         toast.success(
           `Added ${formatCurrency(num)} — now at ${formatCurrency(result.newCurrent)}.`,
@@ -155,28 +153,15 @@ export function GoalCard({
               }
             />
             <DropdownMenuContent align="end">
-              {goal.status !== "active" && (
+              {goal.status === "active" ? (
+                <DropdownMenuItem onClick={() => doSetStatus("done")}>
+                  <Check className="size-3.5" />
+                  Mark done
+                </DropdownMenuItem>
+              ) : (
                 <DropdownMenuItem onClick={() => doSetStatus("active")}>
-                  <Play className="size-3.5" />
-                  Mark active
-                </DropdownMenuItem>
-              )}
-              {goal.status === "active" && (
-                <DropdownMenuItem onClick={() => doSetStatus("paused")}>
-                  <Pause className="size-3.5" />
-                  Pause
-                </DropdownMenuItem>
-              )}
-              {goal.status !== "achieved" && (
-                <DropdownMenuItem onClick={() => doSetStatus("achieved")}>
-                  <TargetIcon className="size-3.5" />
-                  Mark achieved
-                </DropdownMenuItem>
-              )}
-              {goal.status !== "abandoned" && (
-                <DropdownMenuItem onClick={() => doSetStatus("abandoned")}>
-                  <X className="size-3.5" />
-                  Abandon
+                  <RotateCcw className="size-3.5" />
+                  Reopen
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />
@@ -193,7 +178,7 @@ export function GoalCard({
             <div
               className={cn(
                 "h-full rounded-full transition-all",
-                goal.status === "achieved" ? "bg-emerald-400" : "bg-primary",
+                goal.status === "done" ? "bg-emerald-400" : "bg-primary",
               )}
               style={{ width: `${progress}%` }}
             />

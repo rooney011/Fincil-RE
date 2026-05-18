@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/shell/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { AddTransactionDialog } from "./add-transaction-dialog";
+import { ImportCsvDialog } from "./import-csv-dialog";
 import {
   TransactionsList,
   type ListTransaction,
@@ -65,7 +66,12 @@ export default async function TransactionsPage({
       <PageHeader
         title="Transactions"
         description="Every inflow and outflow."
-        action={<AddTransactionDialog />}
+        action={
+          <div className="flex items-center gap-2">
+            <ImportCsvDialog />
+            <AddTransactionDialog />
+          </div>
+        }
       />
 
       <div className="flex items-center gap-1 mb-4">

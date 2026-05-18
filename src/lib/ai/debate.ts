@@ -219,7 +219,7 @@ Amount: ₹${amount.toLocaleString("en-IN")}${category ? ` (${category})` : ""}
 
 USER PROFILE
 - Role: ${profile.role}
-- Monthly income: ₹${profile.monthly_income.toLocaleString("en-IN")} (${profile.income_type})
+- Monthly income: ₹${profile.monthly_income.toLocaleString("en-IN")}
 - Monthly expenses: ₹${profile.monthly_expenses.toLocaleString("en-IN")}
 - Risk tolerance: ${profile.risk_tolerance}
 ${profile.financial_goal ? `- Stated goal: ${profile.financial_goal}` : ""}

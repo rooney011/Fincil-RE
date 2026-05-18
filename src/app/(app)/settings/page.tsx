@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader } from "@/components/shell/page-header";
 import { SettingsForm } from "./settings-form";
+import { DemoDataControls } from "./demo-data-controls";
 import type { UpdateProfileInput } from "./actions";
 
 export default async function SettingsPage() {
@@ -14,19 +15,30 @@ export default async function SettingsPage() {
   const { data: row, error } = await supabase
     .from("profiles")
     .select(
-      "display_name, role, monthly_income, monthly_expenses, income_type, risk_tolerance, financial_goal",
+      "display_name, role, monthly_income, monthly_expenses, risk_tolerance, financial_goal",
     )
     .eq("id", user.id)
     .single();
 
   if (error || !row) redirect("/onboarding");
 
+  const [{ count: totalTransactions }, { count: demoTransactions }] = await Promise.all([
+    supabase
+      .from("transactions")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id),
+    supabase
+      .from("transactions")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("is_demo", true),
+  ]);
+
   const initial: UpdateProfileInput = {
     display_name: (row.display_name as string | null) ?? "",
     role: row.role as UpdateProfileInput["role"],
     monthly_income: Number(row.monthly_income),
     monthly_expenses: Number(row.monthly_expenses),
-    income_type: row.income_type as UpdateProfileInput["income_type"],
     risk_tolerance: row.risk_tolerance as UpdateProfileInput["risk_tolerance"],
     financial_goal: (row.financial_goal as string | null) ?? "",
   };
@@ -37,7 +49,13 @@ export default async function SettingsPage() {
         title="Settings"
         description="Edit your profile. The Council uses this every time you ask."
       />
-      <SettingsForm initial={initial} />
+      <div className="space-y-6">
+        <SettingsForm initial={initial} />
+        <DemoDataControls
+          totalTransactions={totalTransactions ?? 0}
+          demoTransactions={demoTransactions ?? 0}
+        />
+      </div>
     </>
   );
 }

@@ -42,7 +42,7 @@ export async function POST(request: Request) {
   const { data: profileRow } = await supabase
     .from("profiles")
     .select(
-      "monthly_income, monthly_expenses, role, income_type, risk_tolerance, financial_goal, display_name, currency",
+      "monthly_income, monthly_expenses, role, risk_tolerance, financial_goal, display_name, currency",
     )
     .eq("id", user.id)
     .single();
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     ? `USER PROFILE
 - Display name: ${profileRow.display_name ?? "—"}
 - Role: ${profileRow.role}
-- Monthly income: ₹${Number(profileRow.monthly_income).toLocaleString("en-IN")} (${profileRow.income_type})
+- Monthly income: ₹${Number(profileRow.monthly_income).toLocaleString("en-IN")}
 - Monthly expenses (recurring): ₹${Number(profileRow.monthly_expenses).toLocaleString("en-IN")}
 - Risk tolerance: ${profileRow.risk_tolerance}
 ${profileRow.financial_goal ? `- Stated goal: ${profileRow.financial_goal}` : ""}`

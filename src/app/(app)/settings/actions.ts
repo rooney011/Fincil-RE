@@ -9,7 +9,6 @@ const schema = z.object({
   role: z.enum(["student", "freelancer", "employee", "business", "general"]),
   monthly_income: z.number().min(0).max(1_000_000_000),
   monthly_expenses: z.number().min(0).max(1_000_000_000),
-  income_type: z.enum(["fixed", "variable"]),
   financial_goal: z.string().trim().max(500),
   risk_tolerance: z.enum(["low", "medium", "high"]),
 });
@@ -37,7 +36,6 @@ export async function updateProfile(
       role: parsed.data.role,
       monthly_income: parsed.data.monthly_income,
       monthly_expenses: parsed.data.monthly_expenses,
-      income_type: parsed.data.income_type,
       risk_tolerance: parsed.data.risk_tolerance,
       financial_goal: parsed.data.financial_goal || null,
     })

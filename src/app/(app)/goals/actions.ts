@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 const PRIORITIES = ["low", "medium", "high"] as const;
-const STATUSES = ["active", "paused", "achieved", "abandoned"] as const;
+const STATUSES = ["active", "done"] as const;
 
 const createSchema = z.object({
   name: z.string().trim().min(1).max(100),
@@ -89,13 +89,13 @@ export async function contributeToGoal(
   );
   const target = Number(row.target_amount);
   const achieved =
-    newCurrent >= target && row.status !== "achieved";
+    newCurrent >= target && row.status !== "done";
 
   const { error: updError } = await supabase
     .from("savings_goals")
     .update({
       current_amount: newCurrent,
-      ...(achieved ? { status: "achieved" } : {}),
+      ...(achieved ? { status: "done" } : {}),
     })
     .eq("id", parsed.data.id)
     .eq("user_id", user.id);

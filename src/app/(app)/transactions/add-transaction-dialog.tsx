@@ -95,7 +95,7 @@ export function AddTransactionDialog() {
         <DialogHeader>
           <DialogTitle>Add transaction</DialogTitle>
           <DialogDescription>
-            Log an expense or income. Embedded for the Council.
+            Log an expense or income. The Council uses it to ground its advice.
           </DialogDescription>
         </DialogHeader>
 

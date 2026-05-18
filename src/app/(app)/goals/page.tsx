@@ -39,12 +39,10 @@ export default async function GoalsPage() {
     created_at: g.created_at as string,
   }));
 
-  // Order: active first, then paused, then achieved, then abandoned.
+  // Order: active first, done last.
   const statusOrder: Record<Goal["status"], number> = {
     active: 0,
-    paused: 1,
-    achieved: 2,
-    abandoned: 3,
+    done: 1,
   };
   goals.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
 

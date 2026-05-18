@@ -644,7 +644,7 @@ function MathCard({
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
             <Scale className="size-4 text-muted-foreground" />
-            <h2 className="text-sm font-medium">Pre-engine math</h2>
+            <h2 className="text-sm font-medium">The math</h2>
           </div>
           <Badge
             variant="outline"
