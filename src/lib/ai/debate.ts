@@ -22,6 +22,12 @@ import {
   TWIN_SYSTEM,
   REFEREE_SYSTEM,
 } from "./personas";
+import {
+  recallMemories,
+  rememberDebate,
+  type RecallMetric,
+  type WriteMetric,
+} from "./memory";
 import type { StreamEvent } from "./stream-protocol";
 
 export type Agent = "miser" | "visionary";
@@ -61,6 +67,13 @@ export type DebateInput = {
   financeVerdict: FinanceVerdict;
   relevantTransactions: RelevantTransaction[];
   activeGoals?: ActiveGoal[];
+  // Supabase user id. Used as the AgentMem workflowId so memories are isolated
+  // per user. Optional — when absent, the debate runs without memory.
+  userId?: string;
+  // Optional memory telemetry hooks. Used by the benchmark scripts to isolate
+  // the AgentMem search/write time from OpenAI latency. Unused in production.
+  onRecall?: (metric: RecallMetric) => void;
+  onWrite?: (metric: WriteMetric) => void;
   // Pre-formatted block appended to every agent prompt. Used by /api/appeal to
   // pass prior rounds + extracted income context. Empty for first-round debates.
   appealContext?: string;
@@ -116,11 +129,34 @@ export async function streamDebate(
   const maxRounds = 5;
   let round = 0;
 
+  // Recall ONCE per debate, not once per turn. The search query (the purchase
+  // intent) is fixed for the whole debate, and team-scope returns the same
+  // memories for both personas — so per-turn recall (the original middleware
+  // behavior) ran the identical search up to 10×. Instrumentation (Block G)
+  // measured that redundancy at ~1s/turn ≈ 11s wasted per debate. One shared
+  // recall, injected into every persona turn, drops the tax ~10×.
+  const recall = await recallMemories({
+    agentId: "council",
+    userId: input.userId,
+    query: input.query,
+  });
+  input.onRecall?.({
+    agentId: "council",
+    round: 0,
+    ms: recall.ms,
+    hitCount: recall.hitCount,
+    keptCount: recall.keptCount,
+    topRelevance: recall.topRelevance,
+    injectedChars: recall.text.length,
+  });
+  const memoryBlock = recall.text;
+
   while (round < maxRounds) {
     const miserText = await streamPersonaTurn({
       input,
       transcript,
       write,
+      memoryBlock,
       agent: "miser",
       round: round + 1,
       system: MISER_SYSTEM,
@@ -132,6 +168,7 @@ export async function streamDebate(
       input,
       transcript,
       write,
+      memoryBlock,
       agent: "visionary",
       round: round + 1,
       system: VISIONARY_SYSTEM,
@@ -153,6 +190,27 @@ export async function streamDebate(
 
   const twin = await generateTwinVerdict(input, transcript);
 
+  // Best-effort: record a RICH summary of this debate (verdict + the math then +
+  // each side's closing argument) so future debates can recall something
+  // actionable (Block K). No-op when memory is disabled. Wrapped to never throw.
+  const lastOf = (a: Agent) =>
+    [...transcript].reverse().find((t) => t.agent === a)?.content;
+  const writeMetric = await rememberDebate({
+    userId: input.userId,
+    query: input.query,
+    amount: input.amount,
+    category: input.category,
+    verdict: twin.verdict,
+    snapshot: {
+      surplus: input.financeVerdict.surplus,
+      emiImpactPercent: input.financeVerdict.emiImpactPercent,
+      safety: input.financeVerdict.safety,
+    },
+    miserClosing: lastOf("miser"),
+    visionaryClosing: lastOf("visionary"),
+  });
+  input.onWrite?.(writeMetric);
+
   return {
     transcript,
     verdict: twin.verdict,
@@ -167,21 +225,35 @@ async function streamPersonaTurn(args: {
   input: DebateInput;
   transcript: DebateTurn[];
   write: Writer;
+  // Pre-recalled memory block (computed once per debate), prepended to the
+  // persona system prompt. Empty string when memory is off or nothing matched.
+  memoryBlock: string;
   agent: Agent;
   round: number;
   system: string;
   label: string;
 }): Promise<string> {
-  const { input, transcript, write, agent, round, system, label } = args;
+  const { input, transcript, write, memoryBlock, agent, round, system, label } =
+    args;
 
   write({ type: "agent", agent, round });
 
-  const prompt = `${formatContext(input)}
+  // Block K: inject recalled history into the TASK prompt (next to the current
+  // math/context the persona actually responds to), with a pointed instruction
+  // to use it. The nudge is env-toggleable (AGENTMEM_RECALL_NUDGE=false) so the
+  // position-vs-nudge contributions can be measured separately.
+  const historyBlock = memoryBlock ? `\n\n${memoryBlock}\n` : "";
+  const historyNudge =
+    memoryBlock && process.env.AGENTMEM_RECALL_NUDGE !== "false"
+      ? " If the council's prior history above is relevant to this purchase, reference it explicitly."
+      : "";
+
+  const prompt = `${formatContext(input)}${historyBlock}
 
 DEBATE SO FAR
 ${formatTranscript(transcript)}
 
-Your turn as ${label}. 2–3 sentences. Direct.`;
+Your turn as ${label}. 2–3 sentences. Direct.${historyNudge}`;
 
   const result = streamText({
     model: openai(PERSONA_MODEL),

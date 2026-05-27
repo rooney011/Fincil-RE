@@ -250,6 +250,7 @@ export async function POST(request: Request) {
             relevantTransactions,
             activeGoals,
             appealContext,
+            userId: user.id,
           },
           write,
         );

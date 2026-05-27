@@ -162,6 +162,7 @@ export async function POST(request: Request) {
             financeVerdict,
             relevantTransactions,
             activeGoals,
+            userId: user.id,
           },
           write,
         );

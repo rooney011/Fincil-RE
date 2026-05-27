@@ -12,6 +12,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@agentmem/sdk": "^0.7.2",
+    "@agentmem/vercel-ai-provider": "^0.1.1",
     "@ai-sdk/google": "^3.0.73",
     "@ai-sdk/openai": "^3.0.63",
     "@base-ui/react": "^1.4.1",
@@ -45,6 +47,7 @@
     "eslint-config-next": "16.2.6",
     "jsdom": "^29.1.1",
     "tailwindcss": "^4",
+    "tsx": "^4.22.3",
     "typescript": "^5",
     "vitest": "^4.1.6"
   }

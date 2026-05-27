@@ -8,6 +8,9 @@ const serverSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
   OPENAI_API_KEY: z.string().min(1),
   GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
+  // Optional: only required when FEATURE_AGENTMEM is on. Validated lazily by the
+  // debate flow, not at boot, so the app still starts without a memory key.
+  AGENTMEM_API_KEY: z.string().min(1).optional(),
 });
 
 /**
@@ -37,10 +40,15 @@ function parseBoolEnv(raw: string | undefined, fallback: boolean): boolean {
  * - `nudges`: gates the LLM-backed dashboard nudge generator. Default ON.
  *   Flip off to immediately stop OpenAI calls on /dashboard. The static
  *   "This week" card stays.
+ * - `agentmem`: gates the AgentMem memory layer on the council debate.
+ *   Default OFF (experimental). Effective only when AGENTMEM_API_KEY is also
+ *   set — the debate flow degrades gracefully to no-memory if the key is
+ *   missing, so flipping this on without a key is a no-op, not a crash.
  */
 export const features = {
   share: parseBoolEnv(process.env.NEXT_PUBLIC_FEATURE_SHARE, true),
   nudges: parseBoolEnv(process.env.FEATURE_NUDGES, true),
+  agentmem: parseBoolEnv(process.env.FEATURE_AGENTMEM, false),
 };
 
 function parseEnv() {
@@ -66,6 +74,7 @@ function parseEnv() {
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     GOOGLE_GENERATIVE_AI_API_KEY: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+    AGENTMEM_API_KEY: process.env.AGENTMEM_API_KEY,
   });
 
   if (!serverEnv.success) {
