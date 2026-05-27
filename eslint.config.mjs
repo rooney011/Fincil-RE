@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Experimental AgentMem benchmark scripts — runtime tsx tools, not app code.
+    "notes/**",
   ]),
 ]);
 

@@ -1,0 +1,11 @@
+import { performance } from "node:perf_hooks";
+import { streamDebate } from "../../src/lib/ai/debate.ts";
+import { computeFinanceVerdict } from "../../src/lib/finance/engine.ts";
+import { memoryEnabled } from "../../src/lib/ai/memory.ts";
+const profile = { monthly_income:80_000, monthly_expenses:45_000, role:"freelancer" as const, risk_tolerance:"medium" as const, display_name:"Test User", financial_goal:"Save ₹3,00,000 for an emergency fund" };
+console.log(`memoryEnabled: ${memoryEnabled} (expecting FALSE for baseline)`);
+let turns=0;
+const fv = computeFinanceVerdict({ profile, amount:80_000, category:"electronics" });
+const t0=performance.now();
+const r=await streamDebate({ query:"buy a new laptop for my freelance design work", amount:80_000, category:"electronics", profile, financeVerdict:fv, relevantTransactions:[], activeGoals:[], userId:"baseline-no-memory" }, (e:any)=>{ if(e.type==="agent") turns++; });
+console.log(`OFF baseline: ${Math.round(performance.now()-t0)}ms, ${r.rounds} rounds, ${turns} persona turns, verdict=${r.verdict}`);
