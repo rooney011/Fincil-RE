@@ -18,6 +18,8 @@
     "@ai-sdk/openai": "^3.0.63",
     "@base-ui/react": "^1.4.1",
     "@hookform/resolvers": "^5.2.2",
+    "@mem0/vercel-ai-provider": "^3.0.0",
+    "mem0ai": "^3.0.7",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",
     "ai": "^6.0.182",
