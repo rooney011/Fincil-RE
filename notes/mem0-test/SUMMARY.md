@@ -38,7 +38,12 @@ Latency/debate:    recall ~2.0–3.5s, write ~2.5–2.7s → ~5–6s/debate ≈ 
                    overhead on a ~45s debate.  (AgentMem ref: ~8% / ~1.3s recall)
 Cost:              TODO — Mem0 free tier covers small runs; OpenAI debate cost is
                    gpt-4o-mini. ($/1k writes & searches not yet isolated.)
-Contradiction:     TODO — needs an infer:true sub-test with conflicting facts.
+Contradiction:     ❌ out-of-box, does NOT resolve (iter 03). Numeric contradiction
+                   SILENTLY COEXISTS (stale ₹35k + new ₹15k both live, no UPDATE);
+                   conflicting persona recommendations aren't stored at all
+                   (extraction is user-fact-centric, drops assistant opinions).
+                   infer:true is also async+slow (~30s to land). Caveats: tuning
+                   (customInstructions/latestOnly/decay) untested. See 03-contradiction.md.
 Voice bleed (N=3): TODO — capstone not yet run. (team scope works: twin's memory
                    recalled by the council.)  (AgentMem ref: 0)
 DX notes:          Clean MemoryClient API. Footguns: (1) infer:true is async +

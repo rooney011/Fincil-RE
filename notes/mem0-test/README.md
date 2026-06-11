@@ -20,10 +20,12 @@ selected by `MEMORY_PROVIDER`:
 |---|---|
 | `01-setup.md` | Decisions, the pluggable refactor, Mem0 wire contract, env drift |
 | `02-smoke-test.md` | First live run, the infer:true async footgun, the fix, faithful recall |
+| `03-contradiction.md` | infer:true contradiction handling — coexists silently; drops persona opinions |
 | `SUMMARY.md` | **Living** verdict + metric sheet + vs-AgentMem table |
 | `live-test.mts` | 2-debate recall test (same seeds as AgentMem); writes `live-test-result.json` |
 | `probe.mts` | Storage probe: infer:false vs infer:true (sync/async), filter shape |
-| `live-test-result.json` | Raw output of the recall run |
+| `contradiction-test.mts` | Conflicting-facts test; writes `contradiction-test-result.json` |
+| `live-test-result.json` / `contradiction-test-result.json` | Raw outputs |
 
 ## Run
 
