@@ -4,7 +4,9 @@
 **Started:** 2026-06-11
 **Goal:** Benchmark **Mem0** against the AgentMem baseline on Fincil's council
 debate (system #1 in `BENCHMARK_TODO.md`). Hosted Mem0 via `mem0ai` MemoryClient.
-**Status:** 🚧 Recall proven faithful (single-run); cost + contradiction + N=3 pending.
+**Status:** ✅ Complete. Faithful cumulative recall, stable N=3, 0 confab/0 bleed,
+free for the sweep; ~15% latency tax (vs AgentMem ~8%); infer:true dedup doesn't
+resolve conflicts out-of-box. See `SUMMARY.md`.
 
 ## The pluggable seam (so the benchmark is fair)
 
@@ -21,11 +23,13 @@ selected by `MEMORY_PROVIDER`:
 | `01-setup.md` | Decisions, the pluggable refactor, Mem0 wire contract, env drift |
 | `02-smoke-test.md` | First live run, the infer:true async footgun, the fix, faithful recall |
 | `03-contradiction.md` | infer:true contradiction handling — coexists silently; drops persona opinions |
-| `SUMMARY.md` | **Living** verdict + metric sheet + vs-AgentMem table |
+| `04-capstone.md` | N=3 stability, 0 true confab, 0 voice bleed, cumulative recall, cost sheet |
+| `SUMMARY.md` | **Living** verdict + metric sheet + vs-AgentMem table (Mem0 sweep complete) |
 | `live-test.mts` | 2-debate recall test (same seeds as AgentMem); writes `live-test-result.json` |
 | `probe.mts` | Storage probe: infer:false vs infer:true (sync/async), filter shape |
 | `contradiction-test.mts` | Conflicting-facts test; writes `contradiction-test-result.json` |
-| `live-test-result.json` / `contradiction-test-result.json` | Raw outputs |
+| `finish-test.mts` | N=3 capstone (mirrors AgentMem); writes `finish-test-result.json` |
+| `*-result.json` | Raw outputs (reproducibility) |
 
 ## Run
 
