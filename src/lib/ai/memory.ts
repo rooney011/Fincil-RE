@@ -9,6 +9,7 @@
  *
  *   MEMORY_PROVIDER=agentmem   → memory-agentmem.ts   (default)
  *   MEMORY_PROVIDER=mem0       → memory-mem0.ts
+ *   MEMORY_PROVIDER=pgvector   → memory-pgvector.ts  (the baseline floor)
  *
  * The master on/off switch is still `FEATURE_AGENTMEM` (kept for compat — it
  * means "council memory on", regardless of provider). A backend is live only
@@ -20,6 +21,7 @@
 
 import * as agentmem from "./memory-agentmem";
 import * as mem0 from "./memory-mem0";
+import * as pgvector from "./memory-pgvector";
 import type { MemoryBackend } from "./memory-types";
 
 export type {
@@ -33,10 +35,12 @@ export type {
 
 const PROVIDER = (process.env.MEMORY_PROVIDER ?? "agentmem").toLowerCase();
 
-const backend: MemoryBackend = PROVIDER === "mem0" ? mem0 : agentmem;
+const backend: MemoryBackend =
+  PROVIDER === "mem0" ? mem0 : PROVIDER === "pgvector" ? pgvector : agentmem;
 
-/** Which backend is active this process ("agentmem" | "mem0"). */
-export const memoryProvider = PROVIDER === "mem0" ? "mem0" : "agentmem";
+/** Which backend is active this process ("agentmem" | "mem0" | "pgvector"). */
+export const memoryProvider =
+  PROVIDER === "mem0" ? "mem0" : PROVIDER === "pgvector" ? "pgvector" : "agentmem";
 
 /** True only when the master flag is on AND the active backend's key is present. */
 export const memoryEnabled: boolean = backend.memoryEnabled;
