@@ -55,9 +55,11 @@ Contradiction:     P0 CRDT conflict detection available via /v1/crdt/replicas
                    likely timestamp_wins). Full P0 requires human_in_loop policy.
                    See "Moat pillar findings" section below in this file.
 Voice bleed (N=3): 0 (workflowId isolation: exact per-user filter on search)
-P1 bi-temporal:    ✅ factKey per purchase topic. Two debates on same topic
-                   would supersede (tested structurally; no same-topic pair in
-                   this 3-debate sweep). History lineage via GET /v1/memory/:id/history.
+P1 bi-temporal:    ✅ factKey per purchase topic. Supersession OBSERVED live
+                   (2026-07-06): same query at ₹1,50,000 superseded D1 (₹80k).
+                   D1 valid_to closed, new write's supersedes[] contains full D1
+                   record. Live search returns only new fact. 8/8 assertions pass.
+                   See notes/dinomem-test/05-p1-supersession.md.
 P2 receipts:       ✅ Every search generates an immutable receipt. 8 receipts
                    in the session; reader=fincil-council/fincil-probe/fincil-miser,
                    returned_ids track which memory IDs were surfaced.
@@ -130,10 +132,14 @@ conflicts require `human_in_loop` org policy + the CRDT replicas path
 
 ### P1 (bi-temporal)
 factKey per purchase topic (`fincil.purchase.<slug>`) written on every debate.
-Two debates about the SAME topic (same slug) would supersede — the second
-`rememberDebate` call closes the prior window and opens a new one. Verified
-structurally: all 3 this-run debates have unique factKeys so no supersession
-occurred (correct), and GET /v1/memory/:id/history responds with lineage data.
+**Supersession observed live (2026-07-06):** ran a second debate on the same query
+("buy a new laptop for my freelance design work") at ₹1,50,000 with the same
+userId/workflowId. The second `rememberDebate` write closed D1's `valid_to`, set
+D1's `superseded_by` to the new writeId, and the new memory's `supersedes[]` contains
+the full D1 record with timestamps. A fresh reranked search returns only the new fact —
+D1 is absent from live results. 8/8 assertions passed (4a recall pre-write ✅,
+4b lineage ✅, 4c search suppression ✅, 4d receipts ✅).
+See `05-p1-supersession.md` for full evidence including raw history JSON.
 `validFrom` not used in the adapter (defaults to `now()`) — add for backdating.
 
 ### P2 (receipts)
@@ -174,5 +180,8 @@ or receipt auditing is a product requirement.
 | 01 | `01-setup.md` | Discovery: workflowId is the right isolation key, not factKeyPrefix |
 | 02 | `02-integration.md` | Adapter design decisions + response shape probing |
 | 03 | `live-test.mts` | 3-debate recall sweep + P0/P1/P2 moat section |
-| — | `live-test-result.json` | Raw output of the full live run |
+| 05 | `live-test-p1.mts` | P1 supersession observed run (same factKey, second debate) |
+| — | `live-test-result.json` | Raw output of the 2026-07-05 live run |
+| — | `live-test-p1-result.json` | Raw output of the 2026-07-06 P1 supersession run |
+| — | `05-p1-supersession.md` | P1 evidence: history JSON, search-after, verdict |
 | — | `SUMMARY.md` | This file |

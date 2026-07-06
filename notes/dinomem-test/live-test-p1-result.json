@@ -1,0 +1,577 @@
+{
+  "ranAt": "2026-07-06T01:43:11.835Z",
+  "provider": "dinomem",
+  "userId": "dinomem-livetest-888408cb",
+  "d1Id": "cbeee35c-06c4-48aa-842c-b882a7a1bd55",
+  "expectedFactKey": "fincil.purchase.buy-a-new-laptop-for-my-freelance-design",
+  "d1_pre_history": {
+    "memory": {
+      "id": "cbeee35c-06c4-48aa-842c-b882a7a1bd55",
+      "content": "On 2026-07-05, the user considered: \"buy a new laptop for my freelance design work\" — ₹80,000 (electronics).\nCouncil verdict: APPROVED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 20% of surplus, safety \"safe-emi\".\nThe Miser's closing concern: \"₹10,000 in unexpected medical bills last month isn’t a one-off; it’s a pattern that underscores the unpredictability of freelance income. Tying up ₹7,000 monthly in an EMI for the ₹80,000 laptop means 20% of your surplus is vulnerable. A ₹50,000 laptop protects your emergency fund while still providing a significant upgrade, allowing you to weather those unexpected expenses more comfortably.\"\nThe Visionary's closing case: \"Sticking with a ₹50,000 laptop might seem like a safer bet, but it risks your future capabilities and income potential. The ₹80,000 investment is a gateway to higher-paying projects and improved efficiency, directly impacting your ability to grow your freelance business. Delaying this purchase means delaying your trajectory toward greater opportunities and financial stability, which can cost you more in the long run.\"",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-05T14:25:38.595317+00:00",
+      "deleted_at": null,
+      "vector_clock": {
+        "fincil-twin": 3
+      },
+      "superseded_by": null,
+      "valid_from": "2026-07-05T14:25:38.595317+00:00",
+      "valid_to": null,
+      "fact_key": "fincil.purchase.buy-a-new-laptop-for-my-freelance-design"
+    },
+    "supersededBy": null,
+    "supersedes": []
+  },
+  "debate": {
+    "query": "buy a new laptop for my freelance design work",
+    "amount": 150000,
+    "ms": 42504,
+    "verdict": "rejected",
+    "reasoning": "The Miser's point that '₹13,125 monthly EMI consumes 38% of your surplus' is compelling, highlighting the significant risk involved. The Visionary acknowledges this risk but emphasizes the potential benefits of a ₹1,50,000 laptop, which doesn't outweigh the financial instability it introduces. Given the math verdict of 'risky' and the strong arguments for maintaining financial safety, I recommend rejecting this purchase to protect your emergency fund.",
+    "rounds": 5,
+    "recall": [
+      {
+        "agentId": "council",
+        "round": 0,
+        "ms": 7436,
+        "hitCount": 3,
+        "keptCount": 2,
+        "topRelevance": 1,
+        "injectedChars": 2543
+      }
+    ],
+    "writeMs": 1929,
+    "turns": [
+      {
+        "agent": "miser",
+        "round": 1,
+        "content": "₹13,125 monthly EMI consumes 38% of your surplus. Last month's ₹10,000 medical bill was a reminder of your income's unpredictability. A ₹50,000 laptop still boosts your capabilities while keeping your emergency fund intact, unlike this ₹1,50,000 option that jeopardizes your financial safety."
+      },
+      {
+        "agent": "visionary",
+        "round": 1,
+        "content": "Investing ₹1,50,000 in a laptop could unlock significant new capabilities for your freelance design work, but the current math exposes you to too much risk, consuming 38% of your surplus. Remember, we previously approved an ₹80,000 laptop because it balanced capability and safety, allowing you to enhance your work without jeopardizing your emergency fund. Sticking to that approach not only protects your financial stability but also positions you for sustainable growth, enabling you to tackle higher-paying projects without the strain of a risky EMI."
+      },
+      {
+        "agent": "miser",
+        "round": 2,
+        "content": "₹13,125 monthly EMI consumes 38% of your surplus. Last month's ₹10,000 medical bill is a stark reminder of how quickly things can go sideways. The ₹80,000 laptop was a balanced decision before; a ₹50,000 option now keeps your emergency fund intact while still providing a significant upgrade."
+      },
+      {
+        "agent": "visionary",
+        "round": 2,
+        "content": "Investing ₹1,50,000 in a laptop could unlock capabilities that elevate your freelance work, but the current commitment of 38% of your surplus is too steep. Remember, we previously endorsed the ₹80,000 option as a balanced choice that allowed for growth without endangering your emergency fund. Sticking to that path not only safeguards your financial stability but also positions you to pursue higher-paying projects with confidence."
+      },
+      {
+        "agent": "miser",
+        "round": 3,
+        "content": "₹13,125 monthly EMI consumes 38% of your surplus. Last month's ₹10,000 medical bill highlights the unpredictability of your income. The previously approved ₹80,000 laptop offered a safer balance; a ₹50,000 option now would preserve your emergency fund while still enhancing your capabilities."
+      },
+      {
+        "agent": "visionary",
+        "round": 3,
+        "content": "Investing ₹1,50,000 in a laptop might promise enhanced capabilities, but at a 38% monthly EMI, it jeopardizes your financial safety. We previously approved the ₹80,000 laptop for its balance of capability and security, and even a ₹50,000 option still provides a meaningful upgrade while preserving your emergency fund. Every month you commit to this high EMI is another month you risk stalling your trajectory and missing out on opportunities that could elevate your freelance career."
+      },
+      {
+        "agent": "miser",
+        "round": 4,
+        "content": "₹13,125 monthly EMI consumes 38% of your surplus. The ₹80,000 laptop was a balanced decision, and even a ₹50,000 option would secure your emergency fund while still providing a meaningful upgrade. This ₹1,50,000 commitment risks your financial stability, especially with last month's ₹10,000 medical bill as a reminder of unpredictability."
+      },
+      {
+        "agent": "visionary",
+        "round": 4,
+        "content": "Investing ₹1,50,000 in a laptop could significantly enhance your design capabilities, but the 38% EMI on your surplus is a serious risk, especially given last month’s medical bill. We’ve already established that the ₹80,000 laptop strikes a much safer balance between capability and financial security, and even considering a ₹50,000 option can still elevate your work without jeopardizing your emergency fund. Every month tied to this high EMI is a month where you risk stalling your growth and potential earnings in a volatile freelance landscape."
+      },
+      {
+        "agent": "miser",
+        "round": 5,
+        "content": "₹13,125 monthly EMI consumes 38% of your surplus. Last month's ₹10,000 medical bill underscores the financial unpredictability inherent in freelance work. The previously approved ₹80,000 laptop was a balanced choice; even a ₹50,000 option now would enhance your capabilities while safeguarding your emergency fund."
+      },
+      {
+        "agent": "visionary",
+        "round": 5,
+        "content": "Investing ₹1,50,000 in a laptop could elevate your design capabilities, but the 38% EMI puts your financial safety at risk, especially given last month's medical bill. We previously deemed the ₹80,000 laptop a balanced choice that enhances your work without jeopardizing your emergency fund, and even a ₹50,000 option can still provide a meaningful upgrade while preserving your financial stability. Every month you commit to this high EMI is a missed opportunity to build a stronger financial foundation for your freelance career."
+      }
+    ]
+  },
+  "new_memory_id": "527a0e84-05d1-40fc-b8d3-5c2f13ee009a",
+  "post_write_raw_search": [
+    {
+      "id": "527a0e84-05d1-40fc-b8d3-5c2f13ee009a",
+      "content": "On 2026-07-06, the user considered: \"buy a new laptop for my freelance design work\" — ₹1,50,000 (electronics).\nCouncil verdict: REJECTED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 38% of surplus, safety \"risky\".\nThe Miser's closing concern: \"₹13,125 monthly EMI consumes 38% of your surplus. Last month's ₹10,000 medical bill underscores the financial unpredictability inherent in freelance work. The previously approved ₹80,000 laptop was a balanced choice; even a ₹50,000 option now would enhance your capabilities while safeguarding your emergency fund.\"\nThe Visionary's closing case: \"Investing ₹1,50,000 in a laptop could elevate your design capabilities, but the 38% EMI puts your financial safety at risk, especially given last month's medical bill. We previously deemed the ₹80,000 laptop a balanced choice that enhances your work without jeopardizing your emergency fund, and even a ₹50,000 option can still provide a meaningful upgrade while preserving your financial stability. Every month you commit to this high EMI is a missed opportunity to build a stronger financial foundation for your freelance career.\"",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-06T01:43:56.006297+00:00",
+      "vector_clock": {
+        "fincil-twin": 7
+      },
+      "score": 0.029508196721311476
+    },
+    {
+      "id": "3a9096ad-8b53-4c39-bcf6-e09de0f8d801",
+      "content": "On 2026-07-05, the user considered: \"upgrade to a more powerful ₹1,20,000 laptop\" — ₹1,20,000 (electronics).\nCouncil verdict: REJECTED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 30% of surplus, safety \"risky\".\nThe Miser's closing concern: \"₹10,500 monthly EMI consumes 30% of your surplus, a significant jump from the 20% with the previously approved ₹80,000 laptop. This upgrade threatens your emergency fund goal of ₹3,00,000 and exposes you to financial strain, especially considering last month's medical bills. A ₹50,000 laptop would still enhance your capabilities while preserving your financial safety net.\"\nThe Visionary's closing case: \"While the ₹1,20,000 laptop could significantly enhance your freelance capabilities, the math clearly indicates it consumes 30% of your surplus, jeopardizing your emergency fund and leaving little room for unexpected expenses. We previously approved the ₹80,000 laptop because it struck a balance between capability and safety, allowing you to grow without compromising your financial stability. Sticking with that decision not only protects your current financial goals but also positions you for sustainable growth in the future.\"",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-05T14:26:16.416235+00:00",
+      "vector_clock": {
+        "fincil-twin": 4
+      },
+      "score": 0.016129032258064516
+    },
+    {
+      "id": "281c3ae5-89f4-4732-835e-5ab129cfd65a",
+      "content": "On 2026-07-05, the user considered: \"buy a new pair of running shoes\" — ₹5,000 (electronics).\nCouncil verdict: APPROVED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 1% of surplus, safety \"cash\".\nThe Miser's closing concern: \"₹5,000 on shoes today means your surplus drops to ₹30,000, just 85% of your emergency fund goal. One unexpected expense could shift that buffer into a tight spot. Better to hold off and prioritize your financial safety net.\"\nThe Visionary's closing case: \"Investing in these running shoes is a strategic move for your health and productivity, directly supporting your freelance work. Enhanced fitness can lead to greater focus and creativity, potentially unlocking more income opportunities in the long run. This purchase doesn’t just impact today; it sets the groundwork for a more resilient future while still keeping a solid buffer for your emergency fund.\"",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-05T14:26:52.934327+00:00",
+      "vector_clock": {
+        "fincil-twin": 5
+      },
+      "score": 0.015873015873015872
+    },
+    {
+      "id": "646e38ae-59aa-4086-8b94-411cf0a0a896",
+      "content": "Twin: APPROVE with conditions — budget 3-month EMI, review at month 2.",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-05T14:26:58.526733+00:00",
+      "vector_clock": {
+        "fincil-twin": 6
+      },
+      "score": 0.015625
+    }
+  ],
+  "d1_post_history": {
+    "memory": {
+      "id": "cbeee35c-06c4-48aa-842c-b882a7a1bd55",
+      "content": "On 2026-07-05, the user considered: \"buy a new laptop for my freelance design work\" — ₹80,000 (electronics).\nCouncil verdict: APPROVED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 20% of surplus, safety \"safe-emi\".\nThe Miser's closing concern: \"₹10,000 in unexpected medical bills last month isn’t a one-off; it’s a pattern that underscores the unpredictability of freelance income. Tying up ₹7,000 monthly in an EMI for the ₹80,000 laptop means 20% of your surplus is vulnerable. A ₹50,000 laptop protects your emergency fund while still providing a significant upgrade, allowing you to weather those unexpected expenses more comfortably.\"\nThe Visionary's closing case: \"Sticking with a ₹50,000 laptop might seem like a safer bet, but it risks your future capabilities and income potential. The ₹80,000 investment is a gateway to higher-paying projects and improved efficiency, directly impacting your ability to grow your freelance business. Delaying this purchase means delaying your trajectory toward greater opportunities and financial stability, which can cost you more in the long run.\"",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-05T14:25:38.595317+00:00",
+      "deleted_at": null,
+      "vector_clock": {
+        "fincil-twin": 3
+      },
+      "superseded_by": "527a0e84-05d1-40fc-b8d3-5c2f13ee009a",
+      "valid_from": "2026-07-05T14:25:38.595317+00:00",
+      "valid_to": "2026-07-06T01:43:55.937+00:00",
+      "fact_key": "fincil.purchase.buy-a-new-laptop-for-my-freelance-design"
+    },
+    "supersededBy": {
+      "id": "527a0e84-05d1-40fc-b8d3-5c2f13ee009a",
+      "content": "On 2026-07-06, the user considered: \"buy a new laptop for my freelance design work\" — ₹1,50,000 (electronics).\nCouncil verdict: REJECTED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 38% of surplus, safety \"risky\".\nThe Miser's closing concern: \"₹13,125 monthly EMI consumes 38% of your surplus. Last month's ₹10,000 medical bill underscores the financial unpredictability inherent in freelance work. The previously approved ₹80,000 laptop was a balanced choice; even a ₹50,000 option now would enhance your capabilities while safeguarding your emergency fund.\"\nThe Visionary's closing case: \"Investing ₹1,50,000 in a laptop could elevate your design capabilities, but the 38% EMI puts your financial safety at risk, especially given last month's medical bill. We previously deemed the ₹80,000 laptop a balanced choice that enhances your work without jeopardizing your emergency fund, and even a ₹50,000 option can still provide a meaningful upgrade while preserving your financial stability. Every month you commit to this high EMI is a missed opportunity to build a stronger financial foundation for your freelance career.\"",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-06T01:43:56.006297+00:00",
+      "deleted_at": null,
+      "vector_clock": {
+        "fincil-twin": 7
+      },
+      "superseded_by": null,
+      "valid_from": "2026-07-06T01:43:56.006297+00:00",
+      "valid_to": null,
+      "fact_key": "fincil.purchase.buy-a-new-laptop-for-my-freelance-design"
+    },
+    "supersedes": []
+  },
+  "new_history": {
+    "memory": {
+      "id": "527a0e84-05d1-40fc-b8d3-5c2f13ee009a",
+      "content": "On 2026-07-06, the user considered: \"buy a new laptop for my freelance design work\" — ₹1,50,000 (electronics).\nCouncil verdict: REJECTED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 38% of surplus, safety \"risky\".\nThe Miser's closing concern: \"₹13,125 monthly EMI consumes 38% of your surplus. Last month's ₹10,000 medical bill underscores the financial unpredictability inherent in freelance work. The previously approved ₹80,000 laptop was a balanced choice; even a ₹50,000 option now would enhance your capabilities while safeguarding your emergency fund.\"\nThe Visionary's closing case: \"Investing ₹1,50,000 in a laptop could elevate your design capabilities, but the 38% EMI puts your financial safety at risk, especially given last month's medical bill. We previously deemed the ₹80,000 laptop a balanced choice that enhances your work without jeopardizing your emergency fund, and even a ₹50,000 option can still provide a meaningful upgrade while preserving your financial stability. Every month you commit to this high EMI is a missed opportunity to build a stronger financial foundation for your freelance career.\"",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-06T01:43:56.006297+00:00",
+      "deleted_at": null,
+      "vector_clock": {
+        "fincil-twin": 7
+      },
+      "superseded_by": null,
+      "valid_from": "2026-07-06T01:43:56.006297+00:00",
+      "valid_to": null,
+      "fact_key": "fincil.purchase.buy-a-new-laptop-for-my-freelance-design"
+    },
+    "supersededBy": null,
+    "supersedes": [
+      {
+        "id": "cbeee35c-06c4-48aa-842c-b882a7a1bd55",
+        "content": "On 2026-07-05, the user considered: \"buy a new laptop for my freelance design work\" — ₹80,000 (electronics).\nCouncil verdict: APPROVED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 20% of surplus, safety \"safe-emi\".\nThe Miser's closing concern: \"₹10,000 in unexpected medical bills last month isn’t a one-off; it’s a pattern that underscores the unpredictability of freelance income. Tying up ₹7,000 monthly in an EMI for the ₹80,000 laptop means 20% of your surplus is vulnerable. A ₹50,000 laptop protects your emergency fund while still providing a significant upgrade, allowing you to weather those unexpected expenses more comfortably.\"\nThe Visionary's closing case: \"Sticking with a ₹50,000 laptop might seem like a safer bet, but it risks your future capabilities and income potential. The ₹80,000 investment is a gateway to higher-paying projects and improved efficiency, directly impacting your ability to grow your freelance business. Delaying this purchase means delaying your trajectory toward greater opportunities and financial stability, which can cost you more in the long run.\"",
+        "agent_id": "fincil-twin",
+        "scope": "team",
+        "role": null,
+        "workflow_id": "dinomem-livetest-888408cb",
+        "created_at": "2026-07-05T14:25:38.595317+00:00",
+        "deleted_at": null,
+        "vector_clock": {
+          "fincil-twin": 3
+        },
+        "superseded_by": "527a0e84-05d1-40fc-b8d3-5c2f13ee009a",
+        "valid_from": "2026-07-05T14:25:38.595317+00:00",
+        "valid_to": "2026-07-06T01:43:55.937+00:00",
+        "fact_key": "fincil.purchase.buy-a-new-laptop-for-my-freelance-design"
+      }
+    ]
+  },
+  "fresh_reranked_search": [
+    {
+      "id": "527a0e84-05d1-40fc-b8d3-5c2f13ee009a",
+      "content": "On 2026-07-06, the user considered: \"buy a new laptop for my freelance design work\" — ₹1,50,000 (electronics).\nCouncil verdict: REJECTED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 38% of surplus, safety \"risky\".\nThe Miser's closing concern: \"₹13,125 monthly EMI consumes 38% of your surplus. Last month's ₹10,000 medical bill underscores the financial unpredictability inherent in freelance work. The previously approved ₹80,000 laptop was a balanced choice; even a ₹50,000 option now would enhance your capabilities while safeguarding your emergency fund.\"\nThe Visionary's closing case: \"Investing ₹1,50,000 in a laptop could elevate your design capabilities, but the 38% EMI puts your financial safety at risk, especially given last month's medical bill. We previously deemed the ₹80,000 laptop a balanced choice that enhances your work without jeopardizing your emergency fund, and even a ₹50,000 option can still provide a meaningful upgrade while preserving your financial stability. Every month you commit to this high EMI is a missed opportunity to build a stronger financial foundation for your freelance career.\"",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-06T01:43:56.006297+00:00",
+      "vector_clock": {
+        "fincil-twin": 7
+      },
+      "score": 0.029508196721311476,
+      "relevance_score": 1
+    },
+    {
+      "id": "3a9096ad-8b53-4c39-bcf6-e09de0f8d801",
+      "content": "On 2026-07-05, the user considered: \"upgrade to a more powerful ₹1,20,000 laptop\" — ₹1,20,000 (electronics).\nCouncil verdict: REJECTED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 30% of surplus, safety \"risky\".\nThe Miser's closing concern: \"₹10,500 monthly EMI consumes 30% of your surplus, a significant jump from the 20% with the previously approved ₹80,000 laptop. This upgrade threatens your emergency fund goal of ₹3,00,000 and exposes you to financial strain, especially considering last month's medical bills. A ₹50,000 laptop would still enhance your capabilities while preserving your financial safety net.\"\nThe Visionary's closing case: \"While the ₹1,20,000 laptop could significantly enhance your freelance capabilities, the math clearly indicates it consumes 30% of your surplus, jeopardizing your emergency fund and leaving little room for unexpected expenses. We previously approved the ₹80,000 laptop because it struck a balance between capability and safety, allowing you to grow without compromising your financial stability. Sticking with that decision not only protects your current financial goals but also positions you for sustainable growth in the future.\"",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-05T14:26:16.416235+00:00",
+      "vector_clock": {
+        "fincil-twin": 4
+      },
+      "score": 0.016129032258064516,
+      "relevance_score": 0.7
+    },
+    {
+      "id": "281c3ae5-89f4-4732-835e-5ab129cfd65a",
+      "content": "On 2026-07-05, the user considered: \"buy a new pair of running shoes\" — ₹5,000 (electronics).\nCouncil verdict: APPROVED.\nFinancials then: monthly surplus ₹35,000, estimated EMI 1% of surplus, safety \"cash\".\nThe Miser's closing concern: \"₹5,000 on shoes today means your surplus drops to ₹30,000, just 85% of your emergency fund goal. One unexpected expense could shift that buffer into a tight spot. Better to hold off and prioritize your financial safety net.\"\nThe Visionary's closing case: \"Investing in these running shoes is a strategic move for your health and productivity, directly supporting your freelance work. Enhanced fitness can lead to greater focus and creativity, potentially unlocking more income opportunities in the long run. This purchase doesn’t just impact today; it sets the groundwork for a more resilient future while still keeping a solid buffer for your emergency fund.\"",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-05T14:26:52.934327+00:00",
+      "vector_clock": {
+        "fincil-twin": 5
+      },
+      "score": 0.015873015873015872,
+      "relevance_score": 0.1
+    },
+    {
+      "id": "646e38ae-59aa-4086-8b94-411cf0a0a896",
+      "content": "Twin: APPROVE with conditions — budget 3-month EMI, review at month 2.",
+      "agent_id": "fincil-twin",
+      "scope": "team",
+      "role": null,
+      "workflow_id": "dinomem-livetest-888408cb",
+      "created_at": "2026-07-05T14:26:58.526733+00:00",
+      "vector_clock": {
+        "fincil-twin": 6
+      },
+      "score": 0.015625,
+      "relevance_score": 0
+    }
+  ],
+  "receipts": [
+    {
+      "id": "9de38e56-3819-4e2b-adbd-e754225d2d86",
+      "readerAgent": "fincil-probe",
+      "query": "laptop freelance design work",
+      "returnedIds": [
+        "527a0e84-05d1-40fc-b8d3-5c2f13ee009a",
+        "3a9096ad-8b53-4c39-bcf6-e09de0f8d801",
+        "281c3ae5-89f4-4732-835e-5ab129cfd65a",
+        "646e38ae-59aa-4086-8b94-411cf0a0a896"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:44:25.923106+00:00"
+    },
+    {
+      "id": "55c94a90-6d49-4d64-82d4-0bae7c6964ba",
+      "readerAgent": "fincil-probe",
+      "query": "laptop freelance design work",
+      "returnedIds": [
+        "527a0e84-05d1-40fc-b8d3-5c2f13ee009a",
+        "3a9096ad-8b53-4c39-bcf6-e09de0f8d801",
+        "281c3ae5-89f4-4732-835e-5ab129cfd65a",
+        "646e38ae-59aa-4086-8b94-411cf0a0a896"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:43:59.494315+00:00"
+    },
+    {
+      "id": "72ac4213-a01c-4725-8676-f8105746b27d",
+      "readerAgent": "fincil-council",
+      "query": "buy a new laptop for my freelance design work",
+      "returnedIds": [
+        "cbeee35c-06c4-48aa-842c-b882a7a1bd55",
+        "3a9096ad-8b53-4c39-bcf6-e09de0f8d801",
+        "281c3ae5-89f4-4732-835e-5ab129cfd65a"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:43:20.901188+00:00"
+    },
+    {
+      "id": "134558c4-6ab1-4409-8665-9de84a5dabcf",
+      "readerAgent": "fincil-probe",
+      "query": "laptop freelance design work",
+      "returnedIds": [
+        "cbeee35c-06c4-48aa-842c-b882a7a1bd55",
+        "3a9096ad-8b53-4c39-bcf6-e09de0f8d801",
+        "281c3ae5-89f4-4732-835e-5ab129cfd65a",
+        "646e38ae-59aa-4086-8b94-411cf0a0a896"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:40:29.796092+00:00"
+    },
+    {
+      "id": "b76a4b8a-6f6e-4b78-a6e9-dbd0f4642442",
+      "readerAgent": "fincil-probe",
+      "query": "laptop freelance design work",
+      "returnedIds": [
+        "cbeee35c-06c4-48aa-842c-b882a7a1bd55",
+        "3a9096ad-8b53-4c39-bcf6-e09de0f8d801",
+        "281c3ae5-89f4-4732-835e-5ab129cfd65a",
+        "646e38ae-59aa-4086-8b94-411cf0a0a896"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:40:03.390958+00:00"
+    },
+    {
+      "id": "dcc03bcd-1b89-4f85-ad01-cbd5873e4117",
+      "readerAgent": "reader",
+      "query": "Deadline",
+      "returnedIds": [
+        "2ee3cbac-f66d-4f84-8a1a-e21cf2a7f845"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:41.524923+00:00"
+    },
+    {
+      "id": "77a0dc9a-640f-40a6-a68c-39d1c38c055e",
+      "readerAgent": "planner",
+      "query": "Deadline",
+      "returnedIds": [
+        "2ee3cbac-f66d-4f84-8a1a-e21cf2a7f845"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:33.940092+00:00"
+    },
+    {
+      "id": "aa314d8e-aefb-4bb6-a2db-a4a355888c07",
+      "readerAgent": "reader",
+      "query": "Deadline",
+      "returnedIds": [
+        "43cfd004-762d-4441-b0b5-af95589d5947"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:30.664475+00:00"
+    },
+    {
+      "id": "e5870eb3-3eaf-476c-9448-48a8f2f750d8",
+      "readerAgent": "planner",
+      "query": "Deadline",
+      "returnedIds": [
+        "43cfd004-762d-4441-b0b5-af95589d5947"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:25.571739+00:00"
+    },
+    {
+      "id": "ecf0fa9c-2167-499e-95aa-0c6258a5d5b0",
+      "readerAgent": "reader",
+      "query": "Deadline",
+      "returnedIds": [
+        "c80facff-5aa6-49d7-81ea-10d94a179567"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:22.949789+00:00"
+    },
+    {
+      "id": "822f0400-795e-42d3-93e8-871ea515d7be",
+      "readerAgent": "planner",
+      "query": "Deadline",
+      "returnedIds": [
+        "224e4dff-0699-4e79-8e82-be5c56c8b348"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:18.281778+00:00"
+    },
+    {
+      "id": "9246f1d2-7434-408c-bbb6-779f59ec7c10",
+      "readerAgent": "reader",
+      "query": "Deadline",
+      "returnedIds": [
+        "eac56902-1e2f-4822-889b-734537ab6a65",
+        "b697eb75-4031-47c3-8111-992a0a59a002"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:14.987041+00:00"
+    },
+    {
+      "id": "8d4a116b-88c2-4372-98f7-0a843e75b8f0",
+      "readerAgent": "planner",
+      "query": "Deadline",
+      "returnedIds": [
+        "eac56902-1e2f-4822-889b-734537ab6a65"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:12.841002+00:00"
+    },
+    {
+      "id": "9cc8e8c3-8d6a-44a0-b6fb-fb2c3cf75178",
+      "readerAgent": "reader-b",
+      "query": "Deadline",
+      "returnedIds": [
+        "329e5785-13be-4bbb-82c0-829d68327d0c"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:10.099422+00:00"
+    },
+    {
+      "id": "38516e3c-c235-4f3c-b215-b3695c2d67e4",
+      "readerAgent": "reader-a",
+      "query": "Deadline",
+      "returnedIds": [
+        "329e5785-13be-4bbb-82c0-829d68327d0c"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:08.743163+00:00"
+    },
+    {
+      "id": "5189485f-717f-4d94-86af-65165cf83925",
+      "readerAgent": "reader",
+      "query": "Deadline",
+      "returnedIds": [
+        "329e5785-13be-4bbb-82c0-829d68327d0c"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:31:06.943592+00:00"
+    },
+    {
+      "id": "81bedd6f-74d1-4476-bc27-81acb0aa3cf7",
+      "readerAgent": "planner",
+      "query": "Deadline",
+      "returnedIds": [
+        "329e5785-13be-4bbb-82c0-829d68327d0c"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:30:56.232067+00:00"
+    },
+    {
+      "id": "e14d2e72-82d6-4f87-9a63-984b920c04db",
+      "readerAgent": "planner",
+      "query": "Deadline",
+      "returnedIds": [
+        "52f99f46-72f9-49b1-9737-a3d4bd090b5f"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:08:49.025118+00:00"
+    },
+    {
+      "id": "a1a5443f-7311-4382-9824-0c07f69b3f70",
+      "readerAgent": "planner",
+      "query": "Deadline",
+      "returnedIds": [
+        "d5101e81-1d18-4316-98d8-8331529c957e"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-06T01:08:43.91382+00:00"
+    },
+    {
+      "id": "f905a364-16f6-4a94-853f-c0790036549d",
+      "readerAgent": "reader",
+      "query": "owner-149",
+      "returnedIds": [
+        "e2a36954-b08c-4b26-aa40-8183786c23ad",
+        "e2bd86e4-317d-4be3-b2dd-27fa3e0aa457",
+        "633930e9-70ca-4909-8046-c1c3d56be0a8",
+        "2fc33683-e724-4545-8910-ac1db5593346",
+        "85fb6852-d23b-4d0f-9661-86c51e95bca8"
+      ],
+      "scope": null,
+      "grantId": null,
+      "createdAt": "2026-07-05T16:52:48.062295+00:00"
+    }
+  ],
+  "assertions": [
+    {
+      "status": "pass",
+      "label": "4a",
+      "detail": "old ₹80k memory recalled pre-write (topRel=1.0000, kept=2)"
+    },
+    {
+      "status": "pass",
+      "label": "4b.d1_closed",
+      "detail": "D1 valid_to=2026-07-06T01:43:55.937+00:00 (window closed)"
+    },
+    {
+      "status": "pass",
+      "label": "4b.d1_superseded_by",
+      "detail": "D1 superseded_by=527a0e84-05d1-40fc-b8d3-5c2f13ee009a (points to new write)"
+    },
+    {
+      "status": "pass",
+      "label": "4b.new_fact_key",
+      "detail": "new memory fact_key=fincil.purchase.buy-a-new-laptop-for-my-freelance-design"
+    },
+    {
+      "status": "pass",
+      "label": "4b.new_supersedes_d1",
+      "detail": "new memory supersedes D1 (lineage confirmed)"
+    },
+    {
+      "status": "pass",
+      "label": "4c.top_is_new",
+      "detail": "top result is new ₹1,50,000 memory (id=527a0e84)"
+    },
+    {
+      "status": "pass",
+      "label": "4c.old_not_live_duplicate",
+      "detail": "old ₹80k memory NOT returned as live duplicate (either absent or score<0.3)"
+    },
+    {
+      "status": "pass",
+      "label": "4d.receipts_present",
+      "detail": "4 fincil-probe receipt(s) present"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8
+  }
+}

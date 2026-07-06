@@ -33,6 +33,7 @@ Reuse that harness as the template for every other system.
 | # | System | Access | Fits Fincil (TS / Vercel AI SDK)? | What it best tests | Priority |
 |---|---|---|---|---|---|
 | — | **AgentMem** | 🟢 own | ✅ done (`@agentmem/vercel-ai-provider`) | baseline (already measured) | done |
+| — | **DinoMem** | 🟢 own (same key) | ✅ done (plain REST fetch; notes in `notes/dinomem-test/`) | full moat pillars: P0 conflicts, P1 factKey versioning, P2 receipts | **done** |
 | 1 | **Mem0** | 🟢 FREE (OSS + hosted free tier) | ✅ has `@mem0/vercel-ai-provider` — drops in like AgentMem | the category-leader head-to-head | **first** |
 | 2 | **pgvector baseline** | 🟢 FREE (just Supabase) | ✅ trivial — a table + cosine `SELECT TOP K` | the floor: does any memory system beat raw vector search? | **first** |
 | 3 | **Supermemory** | 🟡 FREE TIER (verify dev limits) | ✅ first-party TS SDK | closest analogue — DX + recall quality head-to-head | high |
@@ -43,8 +44,9 @@ Reuse that harness as the template for every other system.
 | — | **MemMachine** | 🔴 VERIFY (maybe OSS) | ❓ | claims 0.9169 LoCoMo | defer |
 | — | **Letta (Cloud)** | 🔴 paid cloud / 🟢 OSS self-host | ❌ drifted to Letta Code; not a clean memory API | — | defer |
 
-**Recommended order to test on Fincil:** `Mem0 → pgvector → Supermemory → Zep → Cognee → (LangMem optional)`.
-Rationale: the first two are free + trivial to wire (Mem0 has a Vercel AI provider; pgvector is just Supabase). Supermemory + Zep are free-tier and have TS SDKs. Cognee/LangMem are Python and need glue, so they come last.
+**Completed so far:** `AgentMem → DinoMem → Mem0 → pgvector`. DinoMem added 2026-07-05.
+**Remaining order:** `Supermemory → Zep → Cognee → (LangMem optional)`.
+Rationale: Supermemory + Zep are free-tier and have TS SDKs. Cognee/LangMem are Python and need glue, so they come last.
 
 ---
 
@@ -77,6 +79,16 @@ Capture these per system, on the **same** debate scenarios AgentMem was tested o
 ## Per-system checklist (repeat for each)
 
 Copy this block per system as you go.
+
+### 0. DinoMem — 🟢 own key — ✅ DONE (2026-07-05)
+- [x] Access: `AGENTMEM_API_KEY` aliases to `DINOMEM_API_KEY` (same DinoMem org).
+- [x] Write adapter `src/lib/ai/memory-dinomem.ts` (plain REST fetch, no SDK).
+- [x] Wire into `memory.ts` dispatcher as `MEMORY_PROVIDER=dinomem`.
+- [x] Run 3-debate recall sweep (seed → recall-related → cold-start unrelated).
+- [x] P0 moat: 3-way concurrent factKey write; check GET /v1/crdt/conflicts.
+- [x] P1 moat: factKey supersession OBSERVED live (2026-07-06) — same factKey written twice, D1 valid_to closed, lineage bidirectional, search suppresses old fact. 8/8 assertions pass. See notes/dinomem-test/05-p1-supersession.md.
+- [x] P2 moat: 8 receipts generated; reader_agent set from search agentId.
+- See `notes/dinomem-test/` for full detail.
 
 ### 1. Mem0 — 🟢 FREE — FIRST
 - [ ] Get access: `npm i mem0ai @mem0/vercel-ai-provider` (OSS self-host) OR grab a hosted free-tier API key.
