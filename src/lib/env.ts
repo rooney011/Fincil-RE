@@ -11,9 +11,10 @@ const serverSchema = z.object({
   // Optional: only required when FEATURE_AGENTMEM is on. Validated lazily by the
   // debate flow, not at boot, so the app still starts without a memory key.
   // Which key matters depends on MEMORY_PROVIDER (agentmem → AGENTMEM_API_KEY,
-  // mem0 → MEM0_API_KEY). Both optional so the app starts without either.
+  // mem0 → MEM0_API_KEY, dinomem → DINOMEM_API_KEY). All optional.
   AGENTMEM_API_KEY: z.string().min(1).optional(),
   MEM0_API_KEY: z.string().min(1).optional(),
+  DINOMEM_API_KEY: z.string().min(1).optional(),
 });
 
 /**
@@ -79,6 +80,7 @@ function parseEnv() {
     GOOGLE_GENERATIVE_AI_API_KEY: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
     AGENTMEM_API_KEY: process.env.AGENTMEM_API_KEY,
     MEM0_API_KEY: process.env.MEM0_API_KEY,
+    DINOMEM_API_KEY: process.env.DINOMEM_API_KEY,
   });
 
   if (!serverEnv.success) {

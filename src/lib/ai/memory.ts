@@ -7,7 +7,8 @@
  * across systems — only the backend module differs. That's what keeps the
  * benchmark apples-to-apples.
  *
- *   MEMORY_PROVIDER=agentmem   → memory-agentmem.ts   (default)
+ *   MEMORY_PROVIDER=agentmem   → memory-agentmem.ts   (default; old SDK)
+ *   MEMORY_PROVIDER=dinomem    → memory-dinomem.ts   (live REST API; moat pillars)
  *   MEMORY_PROVIDER=mem0       → memory-mem0.ts
  *   MEMORY_PROVIDER=pgvector   → memory-pgvector.ts  (the baseline floor)
  *
@@ -20,6 +21,7 @@
  */
 
 import * as agentmem from "./memory-agentmem";
+import * as dinomem from "./memory-dinomem";
 import * as mem0 from "./memory-mem0";
 import * as pgvector from "./memory-pgvector";
 import type { MemoryBackend } from "./memory-types";
@@ -36,11 +38,23 @@ export type {
 const PROVIDER = (process.env.MEMORY_PROVIDER ?? "agentmem").toLowerCase();
 
 const backend: MemoryBackend =
-  PROVIDER === "mem0" ? mem0 : PROVIDER === "pgvector" ? pgvector : agentmem;
+  PROVIDER === "mem0"
+    ? mem0
+    : PROVIDER === "pgvector"
+      ? pgvector
+      : PROVIDER === "dinomem"
+        ? dinomem
+        : agentmem;
 
-/** Which backend is active this process ("agentmem" | "mem0" | "pgvector"). */
+/** Which backend is active this process. */
 export const memoryProvider =
-  PROVIDER === "mem0" ? "mem0" : PROVIDER === "pgvector" ? "pgvector" : "agentmem";
+  PROVIDER === "mem0"
+    ? "mem0"
+    : PROVIDER === "pgvector"
+      ? "pgvector"
+      : PROVIDER === "dinomem"
+        ? "dinomem"
+        : "agentmem";
 
 /** True only when the master flag is on AND the active backend's key is present. */
 export const memoryEnabled: boolean = backend.memoryEnabled;
